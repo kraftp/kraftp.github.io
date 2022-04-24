@@ -59,7 +59,9 @@
                             </p>
                             
                             <ol>
-                                <li>Query serving systems serve large <i>data-parallel</i> queries, where a single query accesses gigabytes to terabytes of data distributed across several machines.</li>
+                                <li>Query serving systems serve large <i>data-parallel</i> queries:
+                                queries are naturally parallelizable because they apply the same operation to multiple data items,
+                                and each query accesses gigabytes to terabytes of data.</li>
                                 <li>Query serving systems are <i>specialized for low latency</i>.  They target a particular problem domain and can run large data-parallel queries in that domain in milliseconds to seconds with the help
                                 of highly optimized custom data representations.</li>
                                 <li>Query serving systems manage <i>batch data updates</i>.  Updates are regular but can be batched, so highly concurrent conflicting writes are rarely a problem.</li>
@@ -69,12 +71,14 @@
                             <p>
                             Once you know what to look for, it becomes clear that a lot of different systems have all three of these properties!
                             For example, a full-text search system like <a href="https://solr.apache.org/">Apache Solr</a> or <a href="https://www.elastic.co/">ElasticSearch</a>
-                            has the first property because searches can run on millions or billions of distributed documents, the second property because it uses specialized data structures
-                            like <a href="https://en.wikipedia.org/wiki/Inverted_index">inverted indexes</a> to store documents and optimize search performance, and has the third property because its data ingest is append-mostly.
-                            A real-time OLAP database like <a href="https://druid.apache.org/">Apache Druid</a> has the first property because queries can span vast datasets,
+                            has the first property because queries apply the same operation, a search, to every document;
+                            the second property because it uses specialized data structures
+                            like <a href="https://en.wikipedia.org/wiki/Inverted_index">inverted indexes</a> to store documents and optimize search performance; and the third property because its data ingest is append-mostly.
+                            A real-time OLAP database like <a href="https://druid.apache.org/">Apache Druid</a> has the first property because its aggregation queries
+                            apply the same operations, like sums or group-bys, to every record;
                             the second because it uses an <a href="http://static.druid.io/docs/druid.pdf">optimized compressed columnar format</a> to run these queries
-                            <a href="https://imply.io/blog/performance-benchmark-druid-presto-hive/">orders of magnitude faster</a> than non-specialized systems,
-                            and the third because its data ingest is append-only.  We believe many other systems and classes of systems have these properties, including timeseries databases
+                            <a href="https://imply.io/blog/performance-benchmark-druid-presto-hive/">orders of magnitude faster</a> than non-specialized systems;
+                            and the third because its data ingest is append-only.  Beyond these, we believe many other systems and classes of systems have these properties, including timeseries databases
                             like <a href="https://www.influxdata.com/">InfluxDB</a> and <a href="http://opentsdb.net/">OpenTSDB</a>, <a href="https://www.pinecone.io/learn/vector-database/">vector databases</a>
                             like <a href="https://www.pinecone.io/">Pinecone</a> and <a href="https://vespa.ai/">Vespa</a>, and even some (but not all) graph databases.
                             </p>
