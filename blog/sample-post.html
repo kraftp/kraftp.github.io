@@ -5,7 +5,7 @@
     <!--- basic page needs
     ================================================== -->
     <meta charset="utf-8">
-    <title>Standard Post - Calvin</title>
+    <title>Query Serving Systems</title>
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -38,97 +38,79 @@
                 <article class="s-content__entry format-standard">
 
                     <div class="s-content__entry-header">
-                        <h1 class="s-content__title s-content__title--post">Hey, This Is A Standard Format Post.</h1>
+                        <h1 class="s-content__title s-content__title--post">Query Serving Systems: A Surprising Kind of Database</h1>
                     </div> <!-- end s-content__entry-header -->
 
                     <div class="s-content__primary">
 
                         <div class="s-content__entry-content">
 
-                            <p class="lead">
-                            Duis ex ad cupidatat tempor Excepteur cillum cupidatat fugiat nostrud cupidatat dolor 
-                            sunt sint sit nisi est eu exercitation incididunt adipisicing veniam velit id fugiat 
-                            enim mollit amet anim veniam dolor dolor irure velit commodo cillum sit nulla ullamco 
-                            magna amet magna cupidatat qui labore cillum sit in tempor veniam consequat non laborum 
-                            adipisicing aliqua ea nisi sint. Unde quod at minus quia velit ipsa ea qui. </p> 
+                            <p>
+                            These days, people are building more kinds of databases and data systems than anyone can count.
+                            We have OLTP systems, OLAP systems, search systems, NoSQL databases, spatiotemporal databases,
+                            graph databases, and many others besides, each in a dozen varieties.
+                            What I want to do in this blog post is impose a bit of order on the chaos
+                            and propose that many of these systems, which on the surface appear different,
+                            actually belong to one category with several useful shared properties: a category we call <i>query serving systems</i>.
+                            </p> 
     
                             <p>
-                            Duis ex ad cupidatat tempor Excepteur cillum cupidatat fugiat nostrud cupidatat dolor 
-                            sunt sint sit nisi est eu exercitation incididunt adipisicing veniam velit id fugiat 
-                            enim mollit amet anim veniam dolor dolor irure velit commodo cillum sit nulla ullamco 
-                            magna amet magna cupidatat qui labore cillum sit in tempor veniam consequat non laborum 
-                            adipisicing aliqua ea nisi sint ut quis proident ullamco ut dolore culpa occaecat ut 
-                            laboris in sit minim cupidatat ut dolor voluptate enim veniam consequat occaecat fugiat 
-                            in adipisicing in amet Ut nulla nisi non ut enim aliqua laborum mollit quis nostrud sed sed.
+                            At a high level, query serving systems serve data-parallel, low-latency queries.  To make this more concrete, let's define them by these three properties:
+                            </p>
+                            
+                            <ol>
+                                <li>Query serving systems serve large <i>data-parallel</i> queries, where a single query accesses gigabytes to terabytes of data distributed across several machines.</li>
+                                <li>Query serving systems are <i>specialized for low latency</i>.  They target a particular problem domain and can run large data-parallel queries in that domain in milliseconds to seconds with the help
+                                of highly optimized custom data representations.</li>
+                                <li>Query serving systems manage <i>batch data updates</i>.  Updates are regular but can be batched, so highly concurrent conflicting writes are rarely a problem.</li>
+                            </ol>
+
+    
+                            <p>
+                            Once you know what to look for, it becomes clear that a lot of different systems have all three of these properties!
+                            For example, a full-text search system like <a href="https://solr.apache.org/">Apache Solr</a> or <a href="https://www.elastic.co/">ElasticSearch</a>
+                            has the first property because searches can run on millions or billions of distributed documents, the second property because it uses specialized data structures
+                            like <a href="https://en.wikipedia.org/wiki/Inverted_index">inverted indexes</a> to store documents and optimize search performance, and has the third property because its ingest is append-mostly.
+                            A real-time OLAP database like <a href="https://druid.apache.org/">Apache Druid</a> has the first property because queries can span vast datasets,
+                            the second because it uses an <a href="http://static.druid.io/docs/druid.pdf">optimized compressed columnar format</a> to run these queries
+                            <a href="https://imply.io/blog/performance-benchmark-druid-presto-hive/">orders of magnitude faster</a> than non-specialized systems,
+                            and the third because its ingest is append-only.  Other systems and classes of systems we believe have these properties include timeseries databases
+                            like <a href="https://www.influxdata.com/">InfluxDB</a> and <a href="http://opentsdb.net/">OpenTSDB</a>, <a href="https://www.pinecone.io/learn/vector-database/">vector databases</a>
+                            like <a href="https://www.pinecone.io/">Pinecone</a> and <a href="https://vespa.ai/">Vespa</a>, and even some (but not all) graph databases.
                             </p>
     
                             <p>
-                                <img src="../images/stanford.jpg" 
-                                         sizes="(max-width: 2100px) 100vw, 2100px" alt="">
+                            The observation that made us interested in query serving systems is that <i>they require similar features at scale</i>.  Fundamentally, all query serving systems perform data-parallel queries
+                            over distributed and partitioned persistent mutable data.  Exactly what the queries and data are varies from system to system&#8212;it may be aggregations over time series
+                            or search over indexed documents&#8212;but this pattern holds true for all of them. As a result, query serving systems require a common set of distributed features and guarantees, which are unlike those needed by other types of database.  Because they store data in regularly-updated custom data representations, query serving systems need consistency and durability for updates and
+                            data replication for high availability&#8212;but since updates are batched, they don't need the fine-grained concurrency control of a relational database.  Because their queries are large and data-parallel, query serving systems need to provide query fault tolerance
+                            and balance query load across servers&#8212;but since queries take milliseconds to seconds, they don't need the ultra-high-performance networking of an in-memory key-value store.
                             </p>
-    
-                            <p>
-                            Duis ex ad cupidatat tempor Excepteur cillum cupidatat fugiat nostrud cupidatat dolor 
-                            sunt sint sit nisi est eu exercitation incididunt adipisicing veniam velit id fugiat 
-                            enim mollit amet anim veniam dolor dolor irure velit commodo cillum sit nulla ullamco 
-                            magna amet magna cupidatat qui labore cillum sit in tempor veniam consequat non laborum 
-                            adipisicing aliqua ea nisi sint ut quis proident ullamco ut dolore culpa occaecat ut 
-                            laboris in sit minim cupidatat ut dolor voluptate enim veniam consequat occaecat fugiat 
-                            in adipisicing in amet Ut nulla nisi non ut enim aliqua laborum mollit quis nostrud sed sed.
-                            </p>
-    
-                            <h2>Large Heading</h2>
-    
-                            <p>
-                            Harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta 
-                            nobis est eligendi optio cumque nihil impedit quo minus <a href="http://#">omnis voluptas assumenda est</a> 
-                            id quod maxime placeat facere possimus, omnis dolor repellendus. Temporibus autem quibusdam et 
-                            aut officiis debitis aut rerum necessitatibus saepe eveniet ut et.</p>
 
                             <p>
-                            Odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti dolores 
-                            et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa. 
-                            Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Nulla vitae elit 
-                            libero, a pharetra augue laboris in sit minim cupidatat ut dolor voluptate enim veniam consequat 
-                            occaecat fugiat in adipisicing in amet Ut nulla nisi non ut enim aliqua laborum mollit quis nostrud sed sed..</p>
-    
-                            <h3>Smaller Heading</h3>
-    
-                            <p>
-                            Quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est 
-                            eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas 
-                            assumenda est, omnis dolor repellendus.
+                            The similarity of these requirements is interesting because it implies we can encapsulate the distributed parts of different query serving systems in a common, modular abstraction,
+                            making scalable query serving systems much easier to build because developers could use this abstraction instead of writing custom distributed code for each new system.
+                            I've been investigating this question of whether a common abstraction is possible, and I recently published a paper (at the conference <a href="https://www.usenix.org/conference/nsdi22">NSDI '22</a>) about one possible abstraction,
+                            called <a href="https://petereliaskraft.net/res/uniserve.pdf">data-parallel actors (DPA)</a>.  If you're interested in details I'd recommend looking at the paper,
+                            but the high-level idea is that we can represent a distributed query serving system as a collection of stateful
+                            <i>actors</i> where each actor is an opaque object encapsulating a partition of data stored in some custom format like a Solr inverted index.
+                            By providing distributed guarantees (e.g., consistency and durability for updates) over data stored in actors and defining a set of generic parallel operators
+                            (based on <a href="https://en.wikipedia.org/wiki/Message_Passing_Interface">MPI</a>)
+                            from which developers can construct any data-parallel query, DPA aims to make it possible to build a distributed query serving system from single-node components.
+                            To show DPA works, we ported several existing query serving systems (including Solr and Druid) to it and also used it to build
+                            a simplified data warehouse based on the single-node column store <a href="https://www.monetdb.org/">MonetDB</a>.
                             </p>
-    
+
                             <p>
-                            Quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est 
-                            eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas 
-                            assumenda est, omnis dolor repellendus.
-                            </p>
-                        
-                                
-                            <p>
-                            Odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti dolores et 
-                            quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa.</p>
-    
-                            <ul>
-                                <li>Donec nulla non metus auctor fringilla.
-                                    <ul>
-                                        <li>Lorem ipsum dolor sit amet.</li>
-                                        <li>Lorem ipsum dolor sit amet.</li>
-                                        <li>Lorem ipsum dolor sit amet.</li>
-                                    </ul>
-                                </li>
-                                <li>Donec nulla non metus auctor fringilla.</li>
-                                <li>Donec nulla non metus auctor fringilla.</li>
-                            </ul>
-    
-                            <p>
-                            Odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti dolores et quas 
-                            molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa. Aenean eu leo quam. 
-                            Pellentesque ornare sem lacinia quam venenatis vestibulum. Nulla vitae elit libero, a pharetra augue 
-                            laboris in sit minim cupidatat ut dolor voluptate enim veniam consequat occaecat fugiat in adipisicing 
-                            in amet Ut nulla nisi non ut enim aliqua laborum mollit quis nostrud sed sed.
+                            I think that DPA and systems like it are very promising,
+                            but even if we don't end up building all query serving systems with a common abstraction, I hope that recognizing their similarities encourages
+                            researchers and engineers to view query serving systems in a new light and build modular infrastructure targeting them.
+                            For example, I'm currently working with some other people at Stanford on a general-purpose data placement algorithm for query serving systems
+                            that improves latency by maximizing query parallelism, spreading out partitions that are frequently queried together.
+                            I suspect that it may also be possible to come up with interesting new general-purpose approaches to query serving system auto-scaling
+                            and incremental view maintenance.
+                            More broadly, I hope it's useful for query serving system developers to know that a large class of their problems are shared by others
+                            and they can look to other systems for inspiration.
                             </p>
 
                         </div> <!-- end s-entry__entry-content -->
@@ -151,7 +133,7 @@
                                 <div class="entry-cat-links meta-blk">
 
                                     <span>On</span>
-                                    April 31, 2023
+                                    April 24, 2022
                                 </div>
 
                             </div>
