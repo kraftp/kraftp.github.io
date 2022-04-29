@@ -84,37 +84,43 @@
                             </p>
     
                             <p>
-                            The observation that made us interested in query serving systems is that <i>they require similar features at scale</i>.  Fundamentally, all query serving systems perform data-parallel queries
-                            over distributed and partitioned persistent mutable data.  Exactly what the queries and data are varies from system to system&#8212;it may be aggregations over time series
-                            or search over indexed documents&#8212;but this pattern holds true for all of them. As a result, query serving systems require a common set of distributed features and guarantees, which are unlike those needed by other types of database.  Because they store data in regularly-updated custom data representations, query serving systems need consistency and durability for updates and
-                            data replication for high availability&#8212;but since updates are batched, they don't need the fine-grained concurrency control of a relational database.  Because their queries are large and data-parallel, query serving systems need to provide query fault tolerance
-                            and balance query load across servers&#8212;but since queries take milliseconds to seconds, they don't need the ultra-high-performance networking of an in-memory key-value store.
+                            One interesting observation we made about query serving systems is that they all include a great deal of custom-built infrastucture needed to run at large scale,
+                            distributing data and queries across many machines.  However, comparing across systems, we found that implementations of this distributed infrastructure are fundamentally <i>similar</i>.
+                            By definition, all query serving systems perform data-parallel queries over distributed persistent mutable data.
+                            Exactly what the queries and data are varies from system to system&#8212;some systems do aggregations over time series,
+                            others search over indexed documents&#8212;but this pattern holds true for all of them.
+                            What we realized is that these properties imply a basic distributed architecture shared by every system we looked at:
+                            they all partition data into many shards (where each shard stores data in a custom specialized data structure as discussed earlier),
+                            provide consistent and durable fault-tolerant updates for data stored in shards,
+                            replicate shards for high availability,
+                            and provide fault-tolerant distributed queries that run in a data-parallel fashion over many shards.
                             </p>
 
                             <p>
                             The similarity of these requirements is interesting because it implies we can encapsulate the distributed parts of different query serving systems in a common, modular abstraction,
                             making scalable query serving systems much easier to build because developers could use this abstraction instead of writing custom distributed code for each new system.
-                            I've been investigating this question of whether a common abstraction is possible, and I recently published a paper (at the conference <a href="https://www.usenix.org/conference/nsdi22">NSDI '22</a>) about one possible abstraction,
-                            called <a href="https://petereliaskraft.net/res/uniserve.pdf">data-parallel actors (DPA)</a>.  If you're interested in details I'd recommend looking at the paper,
-                            but the high-level idea is that we can represent a distributed query serving system as a collection of stateful
-                            <i>actors</i> where each actor is an opaque object encapsulating a partition of data stored in some custom format like a Solr inverted index.
+                            I've been investigating the question of whether a common abstraction is possible, and I recently published a paper
+                            (at the conference <a href="https://www.usenix.org/conference/nsdi22">NSDI '22</a>) about one possible abstraction,
+                            called <a href="https://petereliaskraft.net/res/uniserve.pdf">data-parallel actors (DPA)</a>.
+                            The high-level idea is that we can represent a distributed query serving system as a collection of stateful
+                            <i>actors</i> where each actor is an opaque object encapsulating a partition or shard of data stored in some custom format like a Solr inverted index.
                             By providing distributed guarantees (e.g., consistency and durability for updates) over data stored in actors and defining a set of generic parallel operators
-                            (based on <a href="https://en.wikipedia.org/wiki/Message_Passing_Interface">MPI</a>)
                             from which developers can construct any data-parallel query, DPA aims to make it possible to build a distributed query serving system from single-node components.
                             To show DPA works, we ported several existing query serving systems (including Solr and Druid) to it and also used it to build
                             a simplified data warehouse based on the single-node column store <a href="https://www.monetdb.org/">MonetDB</a>.
+                            If this sounds interesting and you want to read more, there are a lot more details in  <a href="https://petereliaskraft.net/res/uniserve.pdf">the paper</a>!
                             </p>
 
                             <p>
-                            I think that DPA and systems like it are very promising,
+                            Zooming out, I think that DPA and systems like it are very promising,
                             but even if we don't end up building all query serving systems with a common abstraction, I hope that recognizing their similarities encourages
                             researchers and engineers to view query serving systems in a new light and build modular infrastructure targeting them.
                             For example, I'm currently working with some other people at Stanford on a general-purpose data placement algorithm for query serving systems
-                            that improves latency by maximizing query parallelism, spreading out partitions that are frequently queried together.
+                            that improves latency by maximizing query parallelism, spreading out shards that are frequently queried together.
                             I suspect that it may also be possible to come up with interesting new general-purpose approaches to query serving system auto-scaling
                             and incremental view maintenance.
-                            More broadly, I hope it's useful for query serving system developers to know that a large class of their problems are shared by others
-                            and they can look to other systems for inspiration.
+                            More broadly, I hope it's useful for query serving system developers to know that a large class of their problems are shared
+                            and they can look to other systems (and hopefully in the future, to general-purpose frameworks like DPA) for inspiration.
                             </p>
 
                         </div> <!-- end s-entry__entry-content -->
