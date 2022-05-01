@@ -86,18 +86,23 @@
                             <p>
                             One interesting observation we made about query serving systems is that they all include a great deal of custom-built infrastucture needed to run at large scale,
                             distributing data and queries across many machines.  However, comparing across systems, we found that implementations of this distributed infrastructure are fundamentally <i>similar</i>.
-                            By definition, all query serving systems perform data-parallel queries over distributed persistent mutable data.
-                            Exactly what the queries and data are varies from system to system&#8212;some systems do aggregations over time series,
-                            others search over indexed documents&#8212;but this pattern holds true for all of them.
-                            What we realized is that these properties imply a basic distributed architecture shared by every system we looked at:
+                            There's a basic distributed architecture shared by every system we looked at, one that arises naturally from the data parallelism of query serving workloads:
                             they all partition data into many shards (where each shard stores data in a custom specialized data structure as discussed earlier),
                             provide consistent and durable fault-tolerant updates for data stored in shards,
                             replicate shards for high availability,
                             and provide fault-tolerant distributed queries that run in a data-parallel fashion over many shards.
+                            To make this a bit clearer, we diagram below a data-parallel query executing over sharded data;
+                            the query serving system is responsible for distributing each query over many shards
+                            and for managing the data stored in the shards, updating it and keeping it available.
                             </p>
 
                             <p>
-                            The similarity of these requirements is interesting because it implies we can encapsulate the distributed parts of different query serving systems in a common, modular abstraction,
+                                <img src="../images/UniserveBlogPost/UniserveBlogPost.jpg" 
+                                         sizes="(max-width: 2100px) 100vw, 2100px" alt="">
+                            </p>
+
+                            <p>
+                            The ubiquity of this architecture is interesting because it implies we can encapsulate the distributed parts of different query serving systems in a common, modular abstraction,
                             making scalable query serving systems much easier to build because developers could use this abstraction instead of writing custom distributed code for each new system.
                             I've been investigating the question of whether a common abstraction is possible, and I recently published a paper
                             (at the conference <a href="https://www.usenix.org/conference/nsdi22">NSDI '22</a>) about one possible abstraction,
@@ -112,7 +117,7 @@
                             </p>
 
                             <p>
-                            Zooming out, I think that DPA and systems like it are very promising,
+                            Zooming out, I think that DPA and systems like it are promising,
                             but even if we don't end up building all query serving systems with a common abstraction, I hope that recognizing their similarities encourages
                             researchers and engineers to view query serving systems in a new light and build modular infrastructure targeting them.
                             For example, I'm currently working with some other people at Stanford on a general-purpose data placement algorithm for query serving systems
