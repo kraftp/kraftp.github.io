@@ -38,7 +38,7 @@
                 <article class="s-content__entry format-standard">
 
                     <div class="s-content__entry-header">
-                        <h1 class="s-content__title s-content__title--post">Query Serving Systems: A Surprising Kind of Database</h1>
+                        <h1 class="s-content__title s-content__title--post">Query Serving Systems: An Emerging Category of Surprisingly Similar Data Systems</h1>
                     </div> <!-- end s-content__entry-header -->
 
                     <div class="s-content__primary">
@@ -47,8 +47,15 @@
 
                             <p>
                             These days, people are building more kinds of databases and data systems than anyone can count.
-                            We have OLTP systems, OLAP systems, search systems, NoSQL databases, spatiotemporal databases,
-                            graph databases, and many others besides, each in a dozen varieties.
+                            We have OLTP systems like <a href="https://www.cockroachlabs.com/">CockroachDB</a> and the classic <a href="https://www.postgresql.org/">Postgres</a>,
+                            OLAP systems like <a href="https://druid.apache.org/">Druid</a> and <a href="https://clickhouse.com/">Clickhouse</a>,
+                            search systems like <a href="https://www.elastic.co/">ElasticSearch</a> and <a href="https://solr.apache.org/">Solr</a>, 
+                            NoSQL databases like <a href="https://www.mongodb.com/">MongoDB</a> and <a href="https://cassandra.apache.org">Cassandra</a>,
+                            vector databases like <a href="https://www.pinecone.io/">Pinecone</a> and <a href="https://vespa.ai/">Vespa</a>,
+                            graph databases like <a href="https://neo4j.com/">Neo4j</a> and <a href="https://dgraph.io/">Dgraph</a>,
+                            data lakes like <a href="https://delta.io/">Delta Lake</a> and <a href="https://hudi.apache.org/">Hudi</a>,
+                            data warehouses like <a href="https://www.snowflake.com/">Snowflake</a> and <a href="https://aws.amazon.com/redshift/">Redshift</a>,
+                            and many others besides (including <a href="https://cs.stanford.edu/~matei/papers/2021/cidr_lakehouse.pdf">data lakehouses!</a>).
                             What I want to do in this blog post is impose a bit of order on the chaos
                             and propose that many of these systems, which on the surface appear different,
                             actually belong to one category with several useful shared properties: a category we call <i>query serving systems</i>.
