@@ -78,7 +78,7 @@
                             Epoxy works by adapting <a href="https://en.wikipedia.org/wiki/Multiversion_concurrency_control">multi-version concurrency control (MVCC)</a> to a cross-data store setting.
                             We start an Epoxy transaction by initiating a transaction on the primary database.
                             We then ask the primary database for a <i>snapshot</i>, a list of all past primary database transactions whose effects are visible to our new transaction.
-                            Typically, that's all transaction that committed before our new transaction began.
+                            Typically, that's all transactions that committed before our new transaction began.
                             Here's what a snapshot might look like:
                             </p>
 
@@ -88,14 +88,15 @@
                             </p>
 
                             <p>
-                            Here, the blue transactions form the snapshot of our new transaction T11, while the pink transactions are invisible to it (likely because they are not yet complete).
+                            Here, the blue transactions form the snapshot of our new transaction T11, while the pink transactions are invisible to it (likely because they aren't yet complete).
                             </p>
 
                             <p>
-                            After beginning a transaction, Epoxy interposes on all the transaction's reads and writes to secondary stores to enforce transactional safety.
+                            After beginning a transaction, Epoxy interposes on all its reads and writes to secondary stores to enforce <a href="https://jepsen.io/consistency/models/snapshot-isolation">snapshot isolation</a>,
+                            providing the abstraction that the transaction operates on a fixed view of data containing only the changes committed by transactions in its snapshot. 
                             Whenever a record is updated on any secondary store, Epoxy doesn't change it in place, but instead creates a new version of it.
                             It tags that version with two pieces of metadata: the ID of the transaction that created the version (beginTxn) and the ID of the transaction that superseded it with a new version (endTxn; this is initialized to infinity, then set when the version is superseded).
-                            Epoxy stores that metadata inside the record itself, for example as an additional field in a MongoDB or Elasticsearch document.
+                            Epoxy stores this metadata inside the record itself, for example as an additional field in a MongoDB or Elasticsearch document.
                             Then, whenever a read occurs, Epoxy filters the read's data source to only see records whose beginTxn field is in the transaction snapshot and whose endTxn field is not.
                             In other words, each transaction can only see the one unique version of a record that was created by a transaction in its snapshot, but not superseded by any transaction in its snapshot.
                             To make that more clear, let's extend our example from earlier and imagine that T11 is a transaction between Postgres and MongoDB:
@@ -108,11 +109,6 @@
 
                             <p>
                             Here, the blue record versions are visible because they were created but not superseded by transactions in T11's snapshot, while the pink versions are not visible because they were either created by a transaction not in T11's snapshot (like T9) or superseded by a transaction in T11's snapshot (like T8).
-                            </p>
-
-                            <p>
-                            Overall, Epoxy's interposition enforces <a href="https://en.wikipedia.org/wiki/Isolation_(database_systems)">transactional isolation</a>, specifically <a href="https://jepsen.io/consistency/models/snapshot-isolation">snapshot isolation</a>: 
-                            across all data stores, each transaction has the abstraction of working on a fixed view of the data containing only the changes committed by transactions in its snapshot.
                             </p>
 
                             <p>
