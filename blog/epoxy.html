@@ -57,7 +57,7 @@
                             Most databases have a notion of a <a href="https://en.wikipedia.org/wiki/Database_transaction">transaction</a>, a group of related operations which execute as a single <a href="https://en.wikipedia.org/wiki/ACID">atomic, consistent, isolated, and durable</a> unit of work.
                             The canonical example of a transaction is transferring money between bank accounts: to transfer $100 from me to you, the bank runs a transaction which withdraws $100 from my account and deposits $100 in your account.  
                             By running both operations in one transaction, we guarantee that either both go through (and the money is transferred) or neither do (and nothing happens), avoiding failure states where $100 disappears from my account but doesn't appear in yours.
-                            However, transactions only work within a single database, so if our two accounts are in different systems, transferring money reliably is much harder.
+                            However, transactions only work within a single database, so if our our system spans multiple data stores, performing operations reliably is much harder.
                             The traditional solution is to use <a href="https://en.wikipedia.org/wiki/Two-phase_commit_protocol">two-phase commit</a> through a protocol like <a href="https://en.wikipedia.org/wiki/X/Open_XA">X/Open XA</a>, 
                             but while XA is supported by most big relational databases like Postgres and MySQL, it's not supported by popular newer data stores like MongoDB, Cassandra, or Elasticsearch, even though those stores are increasingly embracing transactions.
                             This means that if you want to perform reliable operations across multiple data stores, you probably have to do all the hard work of synchronization, concurrency control, and failure management yourself.
@@ -109,16 +109,17 @@
 
                             <p>
                             Here, the blue record versions are visible because they were created but not superseded by transactions in T11's snapshot, while the pink versions are not visible because they were either created by a transaction not in T11's snapshot (like T9) or superseded by a transaction in T11's snapshot (like T8).
+                            Thus, Epoxy guarantees that if the effects of a transaction are visible to us in Postgres, they're also visible in MongoDB, and vice versa.
                             </p>
 
                             <p>
-                            Epoxy's commit protocol helps it guarantee that transactions are atomic and durable: they either fully commit or fully abort and persist through failures once committed.
+                            Epoxy also guarantees that transactions are atomic and durable: they either commit on all stores or abort and are rolled back on all stores.
                             After a transaction is done with all operations on all stores, Epoxy validates it, verifying that none of its operations conflict with concurrent committed transactions on any data store (this is a form of <a href="https://en.wikipedia.org/wiki/Optimistic_concurrency_control">optimistic concurrency control</a>).
                             It then asks all secondary stores to persist the transaction's changes to durable storage.
                             If these steps succeed, Epoxy commits the transaction by committing on the primary database.
-                            This causes the transaction to appear in the snapshots of future transactions, atomically making it visible to all future transactions on all data stores.
-                            If anything goes wrong, Epoxy aborts, rolling back the transaction on the primary database and deleting new versions on all secondary stores.
-                            Even if that process takes a long time, that's fine--none of the new versions are visible to any other transactions because, unless committed, they aren't in anyone's snapshots.
+                            This causes the transaction to appear in future snapshots, atomically making it visible to all future transactions on all data stores.
+                            If anything goes wrong, Epoxy aborts, rolling back the transaction on the primary database and undoing its changes on all secondary stores.
+                            Even if that process takes a long time, that's fine--none of its changes are visible to any other transactions because, unless committed, they aren't in anyone's snapshots.
                             </p>
 
                             <p>
