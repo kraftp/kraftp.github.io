@@ -77,9 +77,7 @@
                             <p>
                             Epoxy works by adapting <a href="https://en.wikipedia.org/wiki/Multiversion_concurrency_control">multi-version concurrency control (MVCC)</a> to a cross-data store setting.
                             We start an Epoxy transaction by initiating a transaction on the primary database.
-                            From the primary database, we get two useful pieces of information.
-                            The first is a transaction ID, which is guaranteed to be unique and monotonically increasing.
-                            The second is a snapshot, a list of all past transactions whose effects are visible to our new transaction.
+                            We then ask the primary database for a <i>snapshot</i>, a list of all past primary database transactions whose effects are visible to our new transaction.
                             Typically, that's all transaction that committed before our new transaction began.
                             Here's what a snapshot might look like:
                             </p>
@@ -96,39 +94,53 @@
                             <p>
                             After beginning a transaction, Epoxy interposes on all the transaction's reads and writes to secondary stores to enforce transactional safety.
                             Whenever a record is updated on any secondary store, Epoxy doesn't change it in place, but instead creates a new version of it.
-                            It tags that version with two pieces of metadata: the ID of the transaction that created the version and the ID of the transaction that superseded it with a new version (this is initialized to infinity, then set when the version is superseded).
+                            It tags that version with two pieces of metadata: the ID of the transaction that created the version (beginTxn) and the ID of the transaction that superseded it with a new version (endTxn; this is initialized to infinity, then set when the version is superseded).
                             Epoxy stores that metadata inside the record itself, for example as an additional field in a MongoDB or Elasticsearch document.
-                            Then, whenever a read occurs, Epoxy filters its input data source to only see records whose first field is in the transaction snapshot and whose second field is not (in other words, each transaction can only see the one unique version of a record that was created by a transaction in its snapshot, but not superseded by any transaction in its snapshot).
-                            The overall effect of this is to enforce <a href="https://en.wikipedia.org/wiki/Isolation_(database_systems)">transactional isolation</a>, specifically <a href="https://jepsen.io/consistency/models/snapshot-isolation">snapshot isolation</a>: 
+                            Then, whenever a read occurs, Epoxy filters the read's data source to only see records whose beginTxn field is in the transaction snapshot and whose endTxn field is not.
+                            In other words, each transaction can only see the one unique version of a record that was created by a transaction in its snapshot, but not superseded by any transaction in its snapshot.
+                            To make that more clear, let's extend our example from earlier and imagine that T11 is a transaction between Postgres and MongoDB:
+                            </p>
+
+                            <p>
+                                <img src="../images/EpoxyBlogPost/epoxy-example.jpg" 
+                                         sizes="(max-width: 2100px) 100vw, 2100px" alt="">
+                            </p>
+
+                            <p>
+                            Here, the blue record versions are visible because they were created but not superseded by transactions in T11's snapshot, while the pink versions are not visible because they were either created by a transaction not in T11's snapshot (like T9) or superseded by a transaction in T11's snapshot (like T8).
+                            </p>
+
+                            <p>
+                            Overall, Epoxy's interposition enforces <a href="https://en.wikipedia.org/wiki/Isolation_(database_systems)">transactional isolation</a>, specifically <a href="https://jepsen.io/consistency/models/snapshot-isolation">snapshot isolation</a>: 
                             across all data stores, each transaction has the abstraction of working on a fixed view of the data containing only the changes committed by transactions in its snapshot.
                             </p>
 
                             <p>
-                            Epoxy's MVCC also helps it guarantee that transactions are atomic and durable: they either fully commit or fully abort and persist through failures once committed.
+                            Epoxy's commit protocol helps it guarantee that transactions are atomic and durable: they either fully commit or fully abort and persist through failures once committed.
                             After a transaction is done with all operations on all stores, Epoxy validates it, verifying that none of its operations conflict with concurrent committed transactions on any data store (this is a form of <a href="https://en.wikipedia.org/wiki/Optimistic_concurrency_control">optimistic concurrency control</a>).
-                            It then asks all secondary stores to persist all new versions to durable storage.
-                            If these steps succeed, Epoxy commits the transaction simply by committing on the primary database.
+                            It then asks all secondary stores to persist the transaction's changes to durable storage.
+                            If these steps succeed, Epoxy commits the transaction by committing on the primary database.
                             This causes the transaction to appear in the snapshots of future transactions, atomically making it visible to all future transactions on all data stores.
-                            If anything goes wrong, Epoxy aborts, simply rolling back the transaction on the primary database and deleting new versions on all secondary stores.
-                            Even if that process takes a long time, that's fine--none of the transaction's changes are visible to any other transactions because, unless committed, it can't appear in their snapshots.
+                            If anything goes wrong, Epoxy aborts, rolling back the transaction on the primary database and deleting new versions on all secondary stores.
+                            Even if that process takes a long time, that's fine--none of the new versions are visible to any other transactions because, unless committed, they aren't in anyone's snapshots.
                             </p>
 
                             <p>
-                            Of course, like any new protocol, Epoxy has some limitations.
-                            The first is performance.
-                            As you'd expect, all this interposition comes with some overhead.
-                            We analyzed it in <a href="http://petereliaskraft.net/res/p2732-kraft.pdf">our paper</a>--Epoxy performs similarly to XA on the popular database benchmark <a href="https://www.tpc.org/tpcc/default5.asp">TPC-C</a>
-                            (while providing stronger guarantees and supporting more databases) and, on simulated microservices, adds overhead of &lt;10% on read-mostly workloads and ~70% on write-heavy workloads compared to a coordination-free baseline.
-                            The second is interoperability.
-                            Epoxy physically modifies records on secondary stores by adding versioning metadata to them, which means it must be the exclusive mode of accessing a secondary store table.
+                            Of course, like any new protocol, Epoxy has limitations.
+                            First, it makes assumptions about secondary stores, specifically that they provide a way to tag records with metadata and efficiently filter records based on that metadata.
+                            Luckily, these assumptions are met by most popular data stores; for example, in MongoDB, you can store all Epoxy metadata in additional document fields and create an index on the field to quickly filter it.
+                            Second, Epoxy's interposition comes with some overhead.
+                            We analyzed it in <a href="http://petereliaskraft.net/res/p2732-kraft.pdf">our paper</a>--on simulated microservices, Epoxy adds overhead of &lt;10% on read-mostly workloads and ~70% on write-heavy workloads compared to a coordination-free baseline.
+                            We found this is similar to the overhead added by XA, even though Epoxy supports more data stores and provides stronger guarantees.
+                            Third, and most importantly, Epoxy must be the exclusive mode of accessing a secondary store table because it physically modifies records on secondary stores by adding versioning metadata to them.
                             If one application accessing a secondary store table uses Epoxy, all other applications using that store must use Epoxy for operations on that table.
-                            This could make Epoxy tricky to adopt for coordinating with a database used by multiple services, and it's something that can hopefully be improved in future research.
+                            This might make Epoxy tricky to adopt for a database used by multiple services, and it's something that can hopefully be improved in future research.
                             </p>
 
                             <p>
-                            If you're interested in learning more about Epoxy, please check out <a href="http://petereliaskraft.net/res/p2732-kraft.pdf">the paper</a> (appearing at <a href="https://vldb.org/2023/">VLDB 2023</a>).
+                            If you're interested in learning more about Epoxy, please check out <a href="http://petereliaskraft.net/res/p2732-kraft.pdf">our paper</a> (appearing at <a href="https://vldb.org/2023/">VLDB 2023</a>).
                             The paper contains a formal description of the protocol, proofs of correctness, and detailed experiments.
-                            There's also source code for our research prototype available <a href="https://github.com/DBOS-project/apiary/blob/main/Epoxy.md">on GitHub</a>.
+                            There's also source code for our research prototype available <a href="https://github.com/DBOS-project/apiary/blob/main/Epoxy.md">on GitHub</a>, which implements Epoxy for one primary database (Postgres) and four secondary stores (MongoDB, Elasticsearch, MySQL, and Google Cloud Storage).
                             </p>
 
                             <p style="text-align: center;">
@@ -145,7 +157,7 @@
 
                             <div class="entry-author meta-blk">
                                 <div class="author-avatar">
-                                    <a href="https://petereliaskraft.net"><img class="avatar" src="../images/Professional_Profile_2018.jpg" alt=""></a>
+                                    <a href="https://petereliaskraft.net"><img class="avatar" src="../images/Headshot_2023.jpg" alt=""></a>
                                 </div>
                                 <div class="byline">
                                     <span>By</span>
