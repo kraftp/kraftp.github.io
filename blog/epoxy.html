@@ -46,7 +46,7 @@
                         <div class="s-content__entry-content">
 
                             <p>
-                            These days, it's pretty common for a single application to use multiple different data stores.
+                            These days, it's pretty common for a single application to use multiple data stores.
                             Sometimes, it's because each data store is specialized for a particular task.
                             For example, an e-commerce site might use Postgres for robust customer data management, Elasticsearch for fast product search, and S3 for cheap image storage.
                             Other times, it's because an app was built by multiple teams over time, so it ends up with one service storing customer data in Postgres and another storing customer data in MongoDB.
@@ -58,13 +58,13 @@
                             The canonical example of a transaction is transferring money between bank accounts: to transfer $100 from me to you, the bank runs a transaction which withdraws $100 from my account and deposits $100 in your account.  
                             By running both operations in one transaction, we guarantee that either both go through (and the money is transferred) or neither do (and nothing happens), avoiding failure states where $100 disappears from my account but doesn't appear in yours.
                             However, transactions only work within a single database, so if our our system spans multiple data stores, performing operations reliably is much harder.
-                            The traditional solution is to use <a href="https://en.wikipedia.org/wiki/Two-phase_commit_protocol">two-phase commit</a> through a protocol like <a href="https://en.wikipedia.org/wiki/X/Open_XA">X/Open XA</a>, 
-                            but while XA is supported by most big relational databases like Postgres and MySQL, it's not supported by popular newer data stores like MongoDB, Cassandra, or Elasticsearch, even though those stores are increasingly embracing transactions.
+                            The traditional solution is to use <a href="https://en.wikipedia.org/wiki/Two-phase_commit_protocol">two-phase commit</a> through a protocol like <a href="https://en.wikipedia.org/wiki/X/Open_XA">X/Open XA</a>. 
+                            However, while XA is supported by most big relational databases like Postgres and MySQL, it's not supported by popular newer data stores like MongoDB, Cassandra, or Elasticsearch, even though those stores are increasingly embracing transactions.
                             This means that if you want to perform reliable operations across multiple data stores, you probably have to do all the hard work of synchronization, concurrency control, and failure management yourself.
                             </p>
 
                             <p>
-                            In this blog post, I want to tell you about a new protocol named Epoxy (<a href="http://petereliaskraft.net/res/p2732-kraft.pdf">paper</a>), developed as part of my PhD work at Stanford, which should make this problem easier by providing ACID transactions across diverse data stores.
+                            In this blog post, I want to tell you about a new protocol named Epoxy (<a href="http://petereliaskraft.net/res/p2732-kraft.pdf">paper</a>), developed as part of my PhD work at Stanford in the <a href="https://dbos-project.github.io/">DBOS</a> project, which should make this problem easier by providing ACID transactions across hetergeneous data stores.
                             The basic idea behind Epoxy is that we can use a single transactional "primary database", like Postgres, to coordinate transactions among itself and multiple potentially non-transactional "secondary stores", like MongoDB or Elasticsearch.
                             Here's the high-level architecture:
                             </p>
@@ -88,16 +88,16 @@
                             </p>
 
                             <p>
-                            Here, the blue transactions form the snapshot of our new transaction T11, while the pink transactions are invisible to it (likely because they aren't yet complete).
+                            Here, the blue transactions form the snapshot of our new transaction T11, while the pink transactions are invisible to it because they weren't complete when T11 started.
                             </p>
 
                             <p>
-                            After beginning a transaction, Epoxy interposes on all its reads and writes to secondary stores to enforce <a href="https://jepsen.io/consistency/models/snapshot-isolation">snapshot isolation</a>,
-                            providing the abstraction that the transaction operates on a fixed view of data containing only the changes committed by transactions in its snapshot. 
+                            After beginning a transaction, Epoxy interposes on all its reads and writes to secondary stores to enforce <a href="https://jepsen.io/consistency/models/snapshot-isolation">snapshot isolation</a>.
+                            This provides the abstraction that the transaction operates on a fixed view of data containing only the changes committed by transactions in its snapshot on any data store. 
                             Whenever a record is updated on any secondary store, Epoxy doesn't change it in place, but instead creates a new version of it.
                             It tags that version with two pieces of metadata: the ID of the transaction that created the version (beginTxn) and the ID of the transaction that superseded it with a new version (endTxn; this is initialized to infinity, then set when the version is superseded).
                             Epoxy stores this metadata inside the record itself, for example as an additional field in a MongoDB or Elasticsearch document.
-                            Then, whenever a read occurs, Epoxy filters the read's data source to only see records whose beginTxn field is in the transaction snapshot and whose endTxn field is not.
+                            Then, whenever a read occurs, Epoxy interposes on it, filtering its data source to only include records whose beginTxn field is in the transaction snapshot and whose endTxn field is not.
                             In other words, each transaction can only see the one unique version of a record that was created by a transaction in its snapshot, but not superseded by any transaction in its snapshot.
                             To make that more clear, let's extend our example from earlier and imagine that T11 is a transaction between Postgres and MongoDB:
                             </p>
@@ -119,7 +119,7 @@
                             If these steps succeed, Epoxy commits the transaction by committing on the primary database.
                             This causes the transaction to appear in future snapshots, atomically making it visible to all future transactions on all data stores.
                             If anything goes wrong, Epoxy aborts, rolling back the transaction on the primary database and undoing its changes on all secondary stores.
-                            Even if that process takes a long time, that's fine--none of its changes are visible to any other transactions because, unless committed, they aren't in anyone's snapshots.
+                            Even if that process takes a long time, that's fine&#8212;none of its changes are visible to any other transactions because, unless committed, they aren't in anyone's snapshots.
                             </p>
 
                             <p>
@@ -127,7 +127,7 @@
                             First, it makes assumptions about secondary stores, specifically that they provide a way to tag records with metadata and efficiently filter records based on that metadata.
                             Luckily, these assumptions are met by most popular data stores; for example, in MongoDB, you can store all Epoxy metadata in additional document fields and create an index on the field to quickly filter it.
                             Second, Epoxy's interposition comes with some overhead.
-                            We analyzed it in <a href="http://petereliaskraft.net/res/p2732-kraft.pdf">our paper</a>--on simulated microservices, Epoxy adds overhead of &lt;10% on read-mostly workloads and ~70% on write-heavy workloads compared to a coordination-free baseline.
+                            We analyzed it in <a href="http://petereliaskraft.net/res/p2732-kraft.pdf">our paper</a>&#8212;on simulated microservices, Epoxy adds overhead of &lt;10% on read-mostly workloads and ~70% on write-heavy workloads compared to a coordination-free baseline.
                             We found this is similar to the overhead added by XA, even though Epoxy supports more data stores and provides stronger guarantees.
                             Third, and most importantly, Epoxy must be the exclusive mode of accessing a secondary store table because it physically modifies records on secondary stores by adding versioning metadata to them.
                             If one application accessing a secondary store table uses Epoxy, all other applications using that store must use Epoxy for operations on that table.
@@ -167,7 +167,7 @@
                                 <div class="entry-cat-links meta-blk">
 
                                     <span>On</span>
-                                    September 3, 2023
+                                    August 30, 2023
                                 </div>
 
                             </div>
