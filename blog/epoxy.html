@@ -67,7 +67,7 @@
                             </p>
 
                             <p>
-                            In this blog post, I want to tell you about a new protocol named Epoxy (<a href="http://petereliaskraft.net/res/p2732-kraft.pdf">paper</a>), developed as part of my PhD work at Stanford in the <a href="https://dbos-project.github.io/">DBOS</a> project, which should make this problem easier by providing ACID transactions across hetergeneous data stores.
+                            In this blog post, I want to tell you about a new protocol named Epoxy (<a href="http://petereliaskraft.net/res/p2732-kraft.pdf">paper</a>), developed as part of my PhD work at Stanford in the <a href="https://dbos-project.github.io/">DBOS</a> project, which should make this problem easier by providing ACID transactions across heterogeneous data stores.
                             The basic idea behind Epoxy is that we can use a single transactional "primary database", like Postgres, to coordinate transactions among itself and multiple potentially non-transactional "secondary stores", like MongoDB or Elasticsearch.
                             Here's the high-level architecture:
                             </p>
@@ -140,7 +140,7 @@
                             <p>
                             If you're interested in learning more about Epoxy, please check out <a href="http://petereliaskraft.net/res/p2732-kraft.pdf">our paper</a> (appearing at <a href="https://vldb.org/2023/">VLDB 2023</a>).
                             The paper contains a formal description of the protocol, proofs of correctness, and detailed experiments.
-                            There's also source code for our research prototype available <a href="https://github.com/DBOS-project/apiary/blob/main/Epoxy.md">on GitHub</a>, which implements Epoxy for one primary database (Postgres) and four secondary stores (MongoDB, Elasticsearch, MySQL, and Google Cloud Storage).
+                            There's also source code for our research prototype available <a href="https://github.com/DBOS-project/apiary/blob/main/Epoxy.md">on GitHub</a>, which implements Epoxy for one primary database (Postgres) and four secondary stores (MongoDB, Elasticsearch, MySQL, and Google Cloud Storage).  Let us know what you think!
                             </p>
 
                             <p style="text-align: center;">
