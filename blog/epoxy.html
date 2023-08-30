@@ -56,14 +56,14 @@
                             </p>
 
                             <p>
-                            Building apps with multiple data stores is tricky because it's hard to coordinate operations across those stores.
+                            Building robust apps with multiple data stores is tricky because it's hard to coordinate operations across those stores.
                             Most databases have a notion of a <a href="https://en.wikipedia.org/wiki/Database_transaction">transaction</a>, a group of related operations which execute as a single <a href="https://en.wikipedia.org/wiki/ACID">atomic, consistent, isolated, and durable</a> unit of work.
                             The canonical example of a transaction is transferring money between bank accounts: to transfer $100 from me to you, the bank runs a transaction which withdraws $100 from my account and deposits $100 in your account.  
                             By running both operations in one transaction, we guarantee that either both go through (and the money is transferred) or neither do (and nothing happens), avoiding failure states where $100 disappears from my account but doesn't appear in yours.
                             However, transactions only work within a single database, so if our our system spans multiple data stores, performing operations reliably is much harder.
                             The traditional solution is to use <a href="https://en.wikipedia.org/wiki/Two-phase_commit_protocol">two-phase commit</a> through a protocol like <a href="https://en.wikipedia.org/wiki/X/Open_XA">X/Open XA</a>. 
                             However, while XA is supported by most big relational databases like Postgres and MySQL, it's not supported by popular newer data stores like MongoDB, Cassandra, or Elasticsearch, even though those stores are increasingly embracing transactions.
-                            This means that if you want to perform reliable operations across multiple data stores, you probably have to do all the hard work of synchronization, concurrency control, and failure management yourself.
+                            This means that if you want transactions across multiple data stores, you probably have to do all the hard work of synchronization, concurrency control, and failure management yourself.
                             </p>
 
                             <p>
