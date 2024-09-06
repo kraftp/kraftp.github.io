@@ -153,6 +153,33 @@
                 </p>
             </div>
         </article>
+
+        <article class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">
+                <a href="https://drkp.net/papers/ssi-vldb12.pdf" class="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">
+                    Serializable Snapshot Isolation in Postgres
+                </a>
+            </h2>
+            <time datetime="2024-08-12" class="text-sm text-gray-500 mb-4 block">August 12, 2024</time>
+            <div class="prose lg:prose-lg">
+                <p class="mb-4">
+                    Up until 2011, Postgres had a subtle lie: it nominally supported running transactions with the strongest level of isolation--serializable isolation--but if you actually tried, your transactions would run with snapshot isolation, a weaker level.
+                </p>
+                <p class="mb-4">
+                    The reason Postgres had difficulty supporting serializable isolation is because Postgres concurrency control is fundamentally multi-version and snapshot-based. This enables much better concurrency and performance than traditional two-phase locking, but makes providing serializability much harder.
+                </p>
+                <p class="mb-4">
+                    To make Postgres serializable, the database community had to invent a whole new technique extending Postgres's native snapshot isolation: the aptly named serializable snapshot isolation. 
+                </p>
+                <p class="mb-4">
+                    The core algorithm is complex, but the main idea is to build a "serialization graph" of which objects transactions have modified.
+                    Then, after the transaction is done but before committing, check the serialization graph for "dangerous structures" that indicate the transaction is not serializable and abort/retry the transaction if they're found.
+                </p>
+                <p class="mb-4">
+                    Because these checks run after the transaction and have relatively low false positive rates, this allows providing serializable isolation with a much higher level of concurrency (and better performance) than traditional lock-based techniques.
+                </p>
+            </div>
+        </article>
     </div>
 </body>
 </html>
