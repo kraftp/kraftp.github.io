@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peter's Paper Musings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="container mx-auto px-4 py-8">
+        <header class="mb-8 max-w-2xl mx-auto">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">Peter's Paper Musings</h1>
+            <p class="text-xl text-gray-600 mb-1">Microblogging my favorite systems and database papers</p>
+            <p class="text-sm text-gray-500">
+                By <a href="https://petereliaskraft.net/" class="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">Peter Kraft</a>
+            </p>
+        </header>
+        
+        <article class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">
+                <a href="http://www.cs.umd.edu/~abadi/papers/abadi-sigmod08.pdf" class="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">
+                    Column Stores vs. Row Stores: How Different Are They, Really?
+                </a>
+            </h2>
+            <time datetime="2024-09-04" class="text-sm text-gray-500 mb-4 block">2024/09/04</time>
+            <div class="prose lg:prose-lg">
+                <p class="mb-4">
+                    I like this paper from the early days of column stores because it explains how column stores are so effective for analytics and why their benefits are hard to replicate with the traditional row store architecture.
+                </p>
+                <p class="mb-4">
+                    The obvious reason column stores are effective compared to row stores is that they allow queries to only access the columns they need and ignore the others. However, even when that behavior is simulated in row stores (for example, using materialized views containing only the columns needed by a query), column stores perform far better on analytical workloads. Why? The authors find a couple of reasons!
+                </p>
+                <ol class="list-decimal list-inside mb-4">
+                    <li class="mb-2"><strong>Better block iteration.</strong> On analytical queries that evaluate a large number of tuples, a row store needs to iterate through tuples one at a time, extracting data from each tuple to perform predicate evaluation or aggregation. A column store can operate on blocks of values from the same column in a single function call, which takes advantage of CPU caching and parallelism (which is even more true now than it was back then).</li>
+                    <li class="mb-2"><strong>Compression.</strong> Column stores put similar data from the same column together, which can enable enormous space savings, and potentially enormous speedups, through compression, for example on a very sparse column. By contrast, a row store has to store whole rows, so even if one column is very sparse or otherwise low-entropy, it is still stored in its entirety.</li>
+                    <li class="mb-2"><strong>Late materialization.</strong> Even if a column store needs to return rows to answer a query, it can perform most operations (predicates, joins) only on a handful of columns and then materialize rows later for the data the query returns. This can greatly reduce time spent processing values in columns that are returned but not evaluated.</li>
+                </ol>
+            </div>
+        </article>
+    </div>
+</body>
+</html>
