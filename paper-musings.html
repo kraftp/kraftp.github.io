@@ -37,6 +37,39 @@
                 </ol>
             </div>
         </article>
+
+        
+        <article class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">
+                <a href="https://www.usenix.org/system/files/nsdi19-ousterhout.pdf" class="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">
+                    Shenango: Achieving High CPU Efficiency for Latency-sensitive Datacenter Workloads
+                </a>
+            </h2>
+            <time datetime="2024-09-01" class="text-sm text-gray-500 mb-4 block">2024/09/05</time>
+            <div class="prose lg:prose-lg">
+                <p class="mb-4">
+                    I really like this paper because it identifies a narrow but critical problem in ultra-low-latency systems, proposes a solution, then exhaustively benchmarks it. 
+                </p>
+                <p class="mb-4">
+                    The key observation of this paper is that efficiently serving requests with ultra-low latencies is hard because the operating system allocates cores at a granularity of several milliseconds. Therefore, even with an ultra-fast networking stack that can serve requests in microseconds, when a new request comes in you still need to wait milliseconds to get CPU time.
+                </p>
+                <p class="mb-4">
+                    Prior systems got around that problem through static allocation: they had many cores busy-spin waiting for requests so that if a new request came in, it could be handled immediately. However, that's inefficient, because those cores are doing nothing most of the time.
+                </p>
+                <p class="mb-4">
+                    The main idea in Shenango is to have a single busy-spinning thread, the IOKernel, which both makes core allocation decisions and handles network I/O for a number of application runtimes. The applications all run on user threads on top of kernel threads allocated to Shenango. This setup allows Shenango to efficiently allocate cores between the applications, letting them all serve requests with single-digit microsecond latency even as their relative loads change.
+                </p>
+                <p class="mb-4">
+                    The IOKernel polls the NIC receive queue directly to find packets to forward to applications and polls application egress queues to forward their packets to the NIC. While doing this, it keeps track of how many packets are queued for processing at each application, allocating cores to applications that have queues (and removing cores from applications that don't). Because all applications run in user threads, these core allocation decisions execute in microseconds. There are also a ton of optimizations under the hood, particularly around ensuring application cache locality.
+                </p>
+                <p class="mb-4">
+                    The extensive evaluation section shows incredible performance--serving cache requests for memcached on a single 12-core machine, it could handle 5M requests/second with a median response time of 37 microseconds and a p99.9 of 93 microseconds. Try comparing that to your own stack!
+                </p>
+                <p class="mb-4">
+                    <strong>Main takeaway?</strong> Modern computers can be unbelievably, incredibly fast if we really want them to. We often don't take advantage of this performance because we like having high-level abstractions like OS thread scheduling or an OS network stack, but it's good to know what's possible for when it's really needed.
+                </p>
+            </div>
+        </article>
     </div>
 </body>
 </html>
