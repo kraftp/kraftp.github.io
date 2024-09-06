@@ -45,7 +45,7 @@
                     Shenango: Achieving High CPU Efficiency for Latency-sensitive Datacenter Workloads
                 </a>
             </h2>
-            <time datetime="2024-09-01" class="text-sm text-gray-500 mb-4 block">2024/09/05</time>
+            <time datetime="2024-09-01" class="text-sm text-gray-500 mb-4 block">2024/09/01</time>
             <div class="prose lg:prose-lg">
                 <p class="mb-4">
                     I really like this paper because it identifies a narrow but critical problem in ultra-low-latency systems, proposes a solution, then exhaustively benchmarks it. 
@@ -67,6 +67,35 @@
                 </p>
                 <p class="mb-4">
                     <strong>Main takeaway?</strong> Modern computers can be unbelievably, incredibly fast if we really want them to. We often don't take advantage of this performance because we like having high-level abstractions like OS thread scheduling or an OS network stack, but it's good to know what's possible for when it's really needed.
+                </p>
+            </div>
+        </article>
+
+        <article class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">
+                <a href="https://www.pdl.cmu.edu/PDL-FTP/NVM/McAllister-SOSP21.pdf" class="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">
+                    Kangaroo: Caching Billions of Tiny Objects on Flash
+                </a>
+            </h2>
+            <time datetime="2024-08-25" class="text-sm text-gray-500 mb-4 block">2024/08/25</time>
+            <div class="prose lg:prose-lg">
+                <p class="mb-4">
+                    I really like this paper because it not only presents a clever algorithmic solution to an important systems problem, but also thoroughly evaluates it on real-world data.
+                </p>
+                <p class="mb-4">
+                    The basic challenge here is that many systems (especially, but not only, in social media) want to cache billions of tiny objects (like new posts/messages) on SSDs to improve serving performance. However, existing cache strategies don't work well.
+                </p>
+                <p class="mb-4">
+                    Log-structured caches write objects sequentially and index them in memory, but for tiny objects that index grows too large to fit in memory. Set-associative caches hash objects into "sets" so you don't need an index--you can look up an object's page by its hashed key--but every update requires an entire page write which rapidly degrades the SSD (you can only write to an SSD so many times before it wears out).
+                </p>
+                <p class="mb-4">
+                    This paper's clever idea is to combine the two cache strategies to get their advantages without their disadvantages. They buffer incoming writes in a small log-structured cache, which writes to the SSD efficiently (as you're writing sequentially, so you write a page at a time) but doesn't need much memory (as it's small). Periodically, they export keys to a much larger set-associative cache, doing the exports in large batches to the same set to avoid degrading the SSD. When a read comes in, it first checks the log-structured cache, then goes to the larger set-associative cache.
+                </p>
+                <p class="mb-4">
+                    This design produces a cache that's fast, doesn't require much memory, and doesn't degrade SSDs. The authors prove this with an extensive evaluation on production Facebook traces, verifying all these objectives.
+                </p>
+                <p class="mb-4">
+                    <strong>One big takeaway:</strong> There are only so many ways you can optimize a system, no matter how large or complex. Caching and buffering are basic strategies, but if used cleverly are very effective!
                 </p>
             </div>
         </article>
