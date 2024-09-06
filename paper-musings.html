@@ -180,6 +180,50 @@
                 </p>
             </div>
         </article>
+
+        <article class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">
+                <a href="https://people.cs.umass.edu/~yanlei/courses/CS691LL-f06/papers/SH05.pdf" class="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">
+                    What Goes Around Comes Around: A Database History
+                </a>
+            </h2>
+            <time datetime="2024-08-04" class="text-sm text-gray-500 mb-4 block">August 4, 2024</time>
+            <div class="prose lg:prose-lg">
+                <p class="mb-4">
+                    Want to learn some database history? Check out this classic paper by Joe Hellerstein and Mike Stonebraker! It covers the history of databases up to 2005, and there's a sequel that goes up to the present.
+                </p>
+                <p class="mb-4">
+                    What I found most interesting about this paper is that the relational model we all use now was neither obvious nor inevitable. Instead, early databases used different models that seem simpler and are easier to implement, but are much more complex to use in practice.
+                </p>
+                <p class="mb-4">
+                    For example, IBM's IMS database from the 60's had a hierarchical data model where every record must have a unique key and a unique parent record. To query the data you would imperatively "walk the tree" and iterate through records in subtrees to find the data you're looking for. This kind of model is easy to understand and relatively simple to implement, but it makes large queries hard because you have to optimize them yourself (figuring out the most efficient way to walk the tree). It also can't model non-hierarchical relationships.
+                </p>
+                <p class="mb-4">
+                    The contrast with these early data models shows why the relational model is so powerful: it can model almost any relationship, and, when combined with a declarative query language like SQL, it facilitates query optimizers that almost magically figure out the fastest way to give you the data you want.
+                </p>
+            </div>
+        </article>
+
+        <article class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">
+                <a href="https://www.usenix.org/system/files/nsdi20-paper-vuppalapati.pdf" class="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">
+                    Building An Elastic Query Engine on Disaggregated Storage
+                </a>
+            </h2>
+            <time datetime="2024-07-30" class="text-sm text-gray-500 mb-4 block">July 30, 2024</time>
+            <div class="prose lg:prose-lg">
+                <p class="mb-4">
+                    I love this paper from Snowflake diving deep into some of the design choices in their signature data warehouse.
+                </p>
+                <p class="mb-4">
+                    The key idea behind Snowflake is compute-storage disaggregation. Instead of storing persistent data on compute nodes like in a traditional database, Snowflake stores them in S3 and downloads them to compute nodes only when needed for a query. This architecture is incredibly elastic as they only allocate compute resources to users who actually need them.
+                </p>
+                <p class="mb-4">
+                    What's especially interesting about this paper are the optimizations it describes to make a disaggregated data warehouse work at scale. One particular challenge is managing ephemeral data, data needed only for a specific query (for example, tables exchanged during joins). This is hard because, unlike persistent data, its volumes are highly unpredictable.
+                    To solve this problem, Snowflake uses a custom storage system that couples ephemeral data to compute, storing it in memory and on local disk and spilling it to S3 when necessary. They also use this system as a write-through cache for persistent data to minimize the cost of moving it around under heavy traffic.
+                </p>
+            </div>
+        </article>
     </div>
 </body>
 </html>
