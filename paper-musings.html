@@ -99,6 +99,34 @@
                 </p>
             </div>
         </article>
+
+        <article class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">
+                <a href="https://www.vldb.org/pvldb/vol9/p204-leis.pdf" class="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">
+                    How Good Are Query Optimizers, Really?
+                </a>
+            </h2>
+            <time datetime="2024-08-18" class="text-sm text-gray-500 mb-4 block">August 18th, 2024</time>
+            <div class="prose lg:prose-lg">
+                <p class="mb-4">
+                    Query optimizers are a magic part of modern databases. You just write your query and the database figures out the fastest way to execute it! But how well do query optimizers work, really?
+                </p>
+                <p class="mb-4">
+                    I like this paper because it empirically analyzes query optimization techniques on real-world data and draws some surprising conclusions.
+                    The authors focus in particular on the join order problem--in a query with multiple joins, in what order and how does the database execute the joins? This is important because the correct join execution strategy can make queries an order of magnitude faster.
+                </p>
+                <p class="mb-4">
+                    The trickiest part of join order optimization is cardinality estimation, figuring out how many rows would be returned by a join. Good cardinality estimates allow the optimizer to pick joins that return few rows, making the query much faster.
+                    What the authors find is that popular benchmarks like TPC-H are nearly useless for measuring the accuracy of cardinality estimation. That's because the data in these benchmarks is synthetic and unrealistically uniform and independent in a way that trivializes cardinality estimation. On real data, the authors find that cardinality estimates are often off by a factor of more than 1000x, because real data is not uniform and independent in the way query optimizers expect.
+                </p>
+                <p class="mb-4">
+                    Interestingly, the authors find that these disastrous estimates don't always lead to disastrously slow queries. The most common cause of awful performance is when the optimizer tries to be clever and chooses an unindexed nested-loop join based on a low cardinality estimate when the real cardinality is much higher. When those are excluded, the largest gaps in performance come in queries with many joins on foreign key indexes, which expand the size of the search space and make the gap between the fastest and slowest query plans much larger.
+                </p>
+                <p class="mb-4">
+                    <strong>What are the takeaways?</strong> Well, first, be very careful benchmarking on synthetic data--simplifications like independence and uniformity can easily creep in. Second, query optimization matters much more for especially complex queries with many joins and many indexes. If you have those, watch out for what the query optimizer is doing!
+                </p>
+            </div>
+        </article>
     </div>
 </body>
 </html>
