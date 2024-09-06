@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YFNMMN8RYN"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-YFNMMN8RYN');
+    </script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peter's Paper Musings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="shortcut icon" href="favicon.png" >
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="container mx-auto px-4 py-8">
+        <header class="mb-8 max-w-2xl mx-auto">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">Peter's Paper Musings</h1>
+            <p class="text-xl text-gray-600 mb-1">Microblogging my favorite systems and database papers</p>
+            <p class="text-sm text-gray-500">
+                By <a href="https://petereliaskraft.net/" class="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">Peter Kraft</a>
+            </p>
+        </header>
+        
+        <article class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">
+                <a href="http://www.cs.umd.edu/~abadi/papers/abadi-sigmod08.pdf" class="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">
+                    Column Stores vs. Row Stores: How Different Are They, Really?
+                </a>
+            </h2>
+            <time datetime="2024-09-04" class="text-sm text-gray-500 mb-4 block">2024/09/04</time>
+            <div class="prose lg:prose-lg">
+                <p class="mb-4">
+                    I like this paper from the early days of column stores because it explains how column stores are so effective for analytics and why their benefits are hard to replicate with the traditional row store architecture.
+                </p>
+                <p class="mb-4">
+                    The obvious reason column stores are effective compared to row stores is that they allow queries to only access the columns they need and ignore the others. However, even when that behavior is simulated in row stores (for example, using materialized views containing only the columns needed by a query), column stores perform far better on analytical workloads. Why? The authors find a couple of reasons!
+                </p>
+                <ol class="list-decimal list-inside mb-4">
+                    <li class="mb-2"><strong>Better block iteration.</strong> On analytical queries that evaluate a large number of tuples, a row store needs to iterate through tuples one at a time, extracting data from each tuple to perform predicate evaluation or aggregation. A column store can operate on blocks of values from the same column in a single function call, which takes advantage of CPU caching and parallelism (which is even more true now than it was back then).</li>
+                    <li class="mb-2"><strong>Compression.</strong> Column stores put similar data from the same column together, which can enable enormous space savings, and potentially enormous speedups, through compression, for example on a very sparse column. By contrast, a row store has to store whole rows, so even if one column is very sparse or otherwise low-entropy, it is still stored in its entirety.</li>
+                    <li class="mb-2"><strong>Late materialization.</strong> Even if a column store needs to return rows to answer a query, it can perform most operations (predicates, joins) only on a handful of columns and then materialize rows later for the data the query returns. This can greatly reduce time spent processing values in columns that are returned but not evaluated.</li>
+                </ol>
+            </div>
+        </article>
+
+        
+        <article class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">
+                <a href="https://www.usenix.org/system/files/nsdi19-ousterhout.pdf" class="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">
+                    Shenango: Achieving High CPU Efficiency for Latency-sensitive Datacenter Workloads
+                </a>
+            </h2>
+            <time datetime="2024-09-01" class="text-sm text-gray-500 mb-4 block">2024/09/01</time>
+            <div class="prose lg:prose-lg">
+                <p class="mb-4">
+                    I really like this paper because it identifies a narrow but critical problem in ultra-low-latency systems, proposes a solution, then exhaustively benchmarks it. 
+                </p>
+                <p class="mb-4">
+                    The key observation of this paper is that efficiently serving requests with ultra-low latencies is hard because the operating system allocates cores at a granularity of several milliseconds. Therefore, even with an ultra-fast networking stack that can serve requests in microseconds, when a new request comes in you still need to wait milliseconds to get CPU time.
+                </p>
+                <p class="mb-4">
+                    Prior systems got around that problem through static allocation: they had many cores busy-spin waiting for requests so that if a new request came in, it could be handled immediately. However, that's inefficient, because those cores are doing nothing most of the time.
+                </p>
+                <p class="mb-4">
+                    The main idea in Shenango is to have a single busy-spinning thread, the IOKernel, which both makes core allocation decisions and handles network I/O for a number of application runtimes. The applications all run on user threads on top of kernel threads allocated to Shenango. This setup allows Shenango to efficiently allocate cores between the applications, letting them all serve requests with single-digit microsecond latency even as their relative loads change.
+                </p>
+                <p class="mb-4">
+                    The IOKernel polls the NIC receive queue directly to find packets to forward to applications and polls application egress queues to forward their packets to the NIC. While doing this, it keeps track of how many packets are queued for processing at each application, allocating cores to applications that have queues (and removing cores from applications that don't). Because all applications run in user threads, these core allocation decisions execute in microseconds. There are also a ton of optimizations under the hood, particularly around ensuring application cache locality.
+                </p>
+                <p class="mb-4">
+                    The extensive evaluation section shows incredible performance--serving cache requests for memcached on a single 12-core machine, it could handle 5M requests/second with a median response time of 37 microseconds and a p99.9 of 93 microseconds. Try comparing that to your own stack!
+                </p>
+                <p class="mb-4">
+                    <strong>Main takeaway?</strong> Modern computers can be unbelievably, incredibly fast if we really want them to. We often don't take advantage of this performance because we like having high-level abstractions like OS thread scheduling or an OS network stack, but it's good to know what's possible for when it's really needed.
+                </p>
+            </div>
+        </article>
+
+        <article class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">
+                <a href="https://www.pdl.cmu.edu/PDL-FTP/NVM/McAllister-SOSP21.pdf" class="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">
+                    Kangaroo: Caching Billions of Tiny Objects on Flash
+                </a>
+            </h2>
+            <time datetime="2024-08-25" class="text-sm text-gray-500 mb-4 block">2024/08/25</time>
+            <div class="prose lg:prose-lg">
+                <p class="mb-4">
+                    I really like this paper because it not only presents a clever algorithmic solution to an important systems problem, but also thoroughly evaluates it on real-world data.
+                </p>
+                <p class="mb-4">
+                    The basic challenge here is that many systems (especially, but not only, in social media) want to cache billions of tiny objects (like new posts/messages) on SSDs to improve serving performance. However, existing cache strategies don't work well.
+                </p>
+                <p class="mb-4">
+                    Log-structured caches write objects sequentially and index them in memory, but for tiny objects that index grows too large to fit in memory. Set-associative caches hash objects into "sets" so you don't need an index--you can look up an object's page by its hashed key--but every update requires an entire page write which rapidly degrades the SSD (you can only write to an SSD so many times before it wears out).
+                </p>
+                <p class="mb-4">
+                    This paper's clever idea is to combine the two cache strategies to get their advantages without their disadvantages. They buffer incoming writes in a small log-structured cache, which writes to the SSD efficiently (as you're writing sequentially, so you write a page at a time) but doesn't need much memory (as it's small). Periodically, they export keys to a much larger set-associative cache, doing the exports in large batches to the same set to avoid degrading the SSD. When a read comes in, it first checks the log-structured cache, then goes to the larger set-associative cache.
+                </p>
+                <p class="mb-4">
+                    This design produces a cache that's fast, doesn't require much memory, and doesn't degrade SSDs. The authors prove this with an extensive evaluation on production Facebook traces, verifying all these objectives.
+                </p>
+                <p class="mb-4">
+                    <strong>One big takeaway:</strong> There are only so many ways you can optimize a system, no matter how large or complex. Caching and buffering are basic strategies, but if used cleverly are very effective!
+                </p>
+            </div>
+        </article>
+
+        <article class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">
+                <a href="https://www.vldb.org/pvldb/vol9/p204-leis.pdf" class="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">
+                    How Good Are Query Optimizers, Really?
+                </a>
+            </h2>
+            <time datetime="2024-08-18" class="text-sm text-gray-500 mb-4 block">August 18th, 2024</time>
+            <div class="prose lg:prose-lg">
+                <p class="mb-4">
+                    Query optimizers are a magic part of modern databases. You just write your query and the database figures out the fastest way to execute it! But how well do query optimizers work, really?
+                </p>
+                <p class="mb-4">
+                    I like this paper because it empirically analyzes query optimization techniques on real-world data and draws some surprising conclusions.
+                    The authors focus in particular on the join order problem--in a query with multiple joins, in what order and how does the database execute the joins? This is important because the correct join execution strategy can make queries an order of magnitude faster.
+                </p>
+                <p class="mb-4">
+                    The trickiest part of join order optimization is cardinality estimation, figuring out how many rows would be returned by a join. Good cardinality estimates allow the optimizer to pick joins that return few rows, making the query much faster.
+                    What the authors find is that popular benchmarks like TPC-H are nearly useless for measuring the accuracy of cardinality estimation. That's because the data in these benchmarks is synthetic and unrealistically uniform and independent in a way that trivializes cardinality estimation. On real data, the authors find that cardinality estimates are often off by a factor of more than 1000x, because real data is not uniform and independent in the way query optimizers expect.
+                </p>
+                <p class="mb-4">
+                    Interestingly, the authors find that these disastrous estimates don't always lead to disastrously slow queries. The most common cause of awful performance is when the optimizer tries to be clever and chooses an unindexed nested-loop join based on a low cardinality estimate when the real cardinality is much higher. When those are excluded, the largest gaps in performance come in queries with many joins on foreign key indexes, which expand the size of the search space and make the gap between the fastest and slowest query plans much larger.
+                </p>
+                <p class="mb-4">
+                    <strong>What are the takeaways?</strong> Well, first, be very careful benchmarking on synthetic data--simplifications like independence and uniformity can easily creep in. Second, query optimization matters much more for especially complex queries with many joins and many indexes. If you have those, watch out for what the query optimizer is doing!
+                </p>
+            </div>
+        </article>
+
+        <article class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">
+                <a href="https://www.usenix.org/system/files/conference/atc18/atc18-yang.pdf" class="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">
+                    NanoLog: A Nanosecond Scale Logging System
+                </a>
+            </h2>
+            <time datetime="2024-08-15" class="text-sm text-gray-500 mb-4 block">August 15th, 2024</time>
+            <div class="prose lg:prose-lg">
+                <p class="mb-4">
+                    This cool paper from John Ousterhout's group shows how to create an incredibly fast logging system. I like it because it combines deep performance analysis with clever optimizations to make a system as fast as possible. 
+                </p>
+                <p class="mb-4">
+                    NanoLog is implemented as a more-or-less drop-in replacement for printf that's ~100x faster.
+                    The key observation is that the vast majority of log messages are never actually read. Thus, NanoLog tries to do as little work as possible at logging time, deferring work to a postprocessor that runs when someone actually reads a log entry.
+                </p>
+                <p class="mb-4">
+                    When you log a message in NanoLog, it records only the dynamic part of the log message to an in-memory "staging buffer." To avoid overhead from synchronization or cache effects, these are single-consumer, single-producer per-thread circular buffers. Then, a background thread reads from each circular buffer, performs lightweight compression on each record, and writes it to disk.
+                    When you actually read a message, a postprocessor decompresses the records, interpolates them with the original static log message, and presents it to you just like a conventional logger.
+                </p>
+                <p class="mb-4">
+                    The paper has a detailed evaluation section showing which optimizations actually work. The key takeaway is that the combination of 1) only logging dynamic content, not static strings and 2) performing lightweight compression before writing to disk were the most effective optimizations.
+                    I wish more papers would do analyses like this, it's good science!
+                </p>
+            </div>
+        </article>
+
+        <article class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">
+                <a href="https://drkp.net/papers/ssi-vldb12.pdf" class="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">
+                    Serializable Snapshot Isolation in Postgres
+                </a>
+            </h2>
+            <time datetime="2024-08-12" class="text-sm text-gray-500 mb-4 block">August 12, 2024</time>
+            <div class="prose lg:prose-lg">
+                <p class="mb-4">
+                    Up until 2011, Postgres had a subtle lie: it nominally supported running transactions with the strongest level of isolation--serializable isolation--but if you actually tried, your transactions would run with snapshot isolation, a weaker level.
+                </p>
+                <p class="mb-4">
+                    The reason Postgres had difficulty supporting serializable isolation is because Postgres concurrency control is fundamentally multi-version and snapshot-based. This enables much better concurrency and performance than traditional two-phase locking, but makes providing serializability much harder.
+                </p>
+                <p class="mb-4">
+                    To make Postgres serializable, the database community had to invent a whole new technique extending Postgres's native snapshot isolation: the aptly named serializable snapshot isolation. 
+                </p>
+                <p class="mb-4">
+                    The core algorithm is complex, but the main idea is to build a "serialization graph" of which objects transactions have modified.
+                    Then, after the transaction is done but before committing, check the serialization graph for "dangerous structures" that indicate the transaction is not serializable and abort/retry the transaction if they're found.
+                </p>
+                <p class="mb-4">
+                    Because these checks run after the transaction and have relatively low false positive rates, this allows providing serializable isolation with a much higher level of concurrency (and better performance) than traditional lock-based techniques.
+                </p>
+            </div>
+        </article>
+
+        <article class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">
+                <a href="https://people.cs.umass.edu/~yanlei/courses/CS691LL-f06/papers/SH05.pdf" class="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">
+                    What Goes Around Comes Around: A Database History
+                </a>
+            </h2>
+            <time datetime="2024-08-04" class="text-sm text-gray-500 mb-4 block">August 4, 2024</time>
+            <div class="prose lg:prose-lg">
+                <p class="mb-4">
+                    Want to learn some database history? Check out this classic paper by Joe Hellerstein and Mike Stonebraker! It covers the history of databases up to 2005, and there's a sequel that goes up to the present.
+                </p>
+                <p class="mb-4">
+                    What I found most interesting about this paper is that the relational model we all use now was neither obvious nor inevitable. Instead, early databases used different models that seem simpler and are easier to implement, but are much more complex to use in practice.
+                </p>
+                <p class="mb-4">
+                    For example, IBM's IMS database from the 60's had a hierarchical data model where every record must have a unique key and a unique parent record. To query the data you would imperatively "walk the tree" and iterate through records in subtrees to find the data you're looking for. This kind of model is easy to understand and relatively simple to implement, but it makes large queries hard because you have to optimize them yourself (figuring out the most efficient way to walk the tree). It also can't model non-hierarchical relationships.
+                </p>
+                <p class="mb-4">
+                    The contrast with these early data models shows why the relational model is so powerful: it can model almost any relationship, and, when combined with a declarative query language like SQL, it facilitates query optimizers that almost magically figure out the fastest way to give you the data you want.
+                </p>
+            </div>
+        </article>
+
+        <article class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">
+                <a href="https://www.usenix.org/system/files/nsdi20-paper-vuppalapati.pdf" class="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">
+                    Building An Elastic Query Engine on Disaggregated Storage
+                </a>
+            </h2>
+            <time datetime="2024-07-30" class="text-sm text-gray-500 mb-4 block">July 30, 2024</time>
+            <div class="prose lg:prose-lg">
+                <p class="mb-4">
+                    I love this paper from Snowflake diving deep into some of the design choices in their signature data warehouse.
+                </p>
+                <p class="mb-4">
+                    The key idea behind Snowflake is compute-storage disaggregation. Instead of storing persistent data on compute nodes like in a traditional database, Snowflake stores them in S3 and downloads them to compute nodes only when needed for a query. This architecture is incredibly elastic as they only allocate compute resources to users who actually need them.
+                </p>
+                <p class="mb-4">
+                    What's especially interesting about this paper are the optimizations it describes to make a disaggregated data warehouse work at scale. One particular challenge is managing ephemeral data, data needed only for a specific query (for example, tables exchanged during joins). This is hard because, unlike persistent data, its volumes are highly unpredictable.
+                    To solve this problem, Snowflake uses a custom storage system that couples ephemeral data to compute, storing it in memory and on local disk and spilling it to S3 when necessary. They also use this system as a write-through cache for persistent data to minimize the cost of moving it around under heavy traffic.
+                </p>
+            </div>
+        </article>
+
+        <article class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">
+                <a href="https://15721.courses.cs.cmu.edu/spring2016/papers/a16-graefe.pdf" class="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">
+                    A Survey of B-Tree Locking Techniques
+                </a>
+            </h2>
+            <time datetime="2024-07-28" class="text-sm text-gray-500 mb-4 block">July 28, 2024</time>
+            <div class="prose lg:prose-lg">
+                <p class="mb-4">
+                    Want to learn how database locks actually work? Check out this incredibly thorough review by database legend Goetz Graefe, which dives deep into how databases use locks to protect your data and the integrity of your transactions.
+                </p>
+                <p class="mb-4">
+                    One of the most interesting distinctions in this paper is between locks and latches:
+                </p>
+                <ul class="list-disc list-inside mb-4">
+                    <li class="mb-2">
+                        <strong>Locks:</strong> Provide concurrency control between transactions. They're heavyweight, meant to be held for a long time, and support complex scheduling and deadlock detection policies. However, as a result, they're expensive to acquire and release, requiring thousands of CPU cycles.
+                    </li>
+                    <li class="mb-2">
+                        <strong>Latches:</strong> Protect individual data structures from concurrent accesses by different threads/processes. They're lightweight (tens of CPU cycles per acquire/release), are held only while the data structure is being read or updated, and have minimal scheduling or deadlock detection capabilities and thus must be used very carefully.
+                        You might grab a latch before physically modifying a B-tree page in memory to ensure no one else concurrently writes to that page.
+                    </li>
+                </ul>
+            </div>
+        </article>
+
+        <article class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">
+                <a href="https://db.cs.cmu.edu/papers/2017/p781-wu.pdf" class="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">
+                    An Empirical Evaluation of In-Memory Multi-Version Concurrency Control
+                </a>
+            </h2>
+            <time datetime="2024-07-23" class="text-sm text-gray-500 mb-4 block">July 23, 2024</time>
+            <div class="prose lg:prose-lg">
+                <p class="mb-4">
+                    I really like this paper because it dives deep into the most widely used type of concurrency control today: multi-version concurrency control (MVCC).
+                </p>
+                <p class="mb-4">
+                    The basic idea behind MVCC is for a database to store multiple versions of each data item so that transactions can read from items being written to by other transactions. This can greatly improve transaction throughput by allowing any number of reads to occur concurrently with a write.
+                </p>
+                <p class="mb-4">
+                    Of course, there are many ways to implement MVCC, and the paper describes several of the most popular approaches and their tradeoffs, with detailed experiments to show how much those tradeoffs matter in practice.
+                </p>
+                <p class="mb-4">
+                    When I was working on concurrency control in grad school, I spent a lot of time looking at this paper and its references to learn the field!
+                </p>
+            </div>
+        </article>
+
+        <article class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">
+                <a href="https://www.usenix.org/system/files/osdi22-huang-lexiang.pdf" class="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">
+                    Metastable Failures in the Wild
+                </a>
+            </h2>
+            <time datetime="2024-07-21" class="text-sm text-gray-500 mb-4 block">July 21, 2024</time>
+            <div class="prose lg:prose-lg">
+                <p class="mb-4">
+                    Want to learn how systems fail at scale? Check out this paper on metastable failures, a complex class of failures characteristic of big distributed systems. A metastable failure is a bad state that continues even after the triggering event is removed. For example, if an overloaded system continues to perform badly even after load decreases, that's a metastable failure.
+                </p>
+                <p class="mb-4">
+                    Here's a simple example of a metastable failure:
+                </p>
+                <ol class="list-decimal list-inside mb-4">
+                    <li>An application server is operating healthily, but near saturation.</li>
+                    <li>A network issue takes it offline for a few seconds.</li>
+                    <li>When the server comes back online, it experiences a huge surge of traffic from clients retrying failed requests.</li>
+                    <li>This surge may cause requests to time out, triggering more retries (if the retry policy is naive).</li>
+                    <li>This cascades and prevents the server from doing useful work until the retry policy is fixed.</li>
+                </ol>
+                <p class="mb-4">
+                    Notice how counterintuitive this is! The system was healthy until a brief outage happened, but that brief outage sent it into a catastrophic persistent failure even though nothing else about the system or workload changed.
+                </p>
+                <p class="mb-4">
+                    Check out the paper to see more examples, detailed real-world case studies, and proposed solutions!
+                </p>
+            </div>
+        </article>
+
+        <article class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">
+                <a href="https://www.cs.umd.edu/~abadi/papers/abadi-pacelc.pdf" class="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">
+                    Consistency Tradeoffs in Modern Distributed Database Design
+                </a>
+            </h2>
+            <time datetime="2024-07-14" class="text-sm text-gray-500 mb-4 block">July 14, 2024</time>
+            <div class="prose lg:prose-lg">
+                <p class="mb-4">
+                    The famous CAP theorem is overrated. What the CAP theorem says is that in the event of a network partition, a system cannot be both consistent and available. This tradeoff is important, but not often relevant because network partitions are rare.
+                </p>
+                <p class="mb-4">
+                    Instead, the important tradeoff is between consistency and latency. In a distributed system, these are fundamentally at odds, as stronger consistency models require more coordination between nodes, which increases latency. Unlike the CAP tradeoff, the consistency-latency tradeoff is one you always have to worry about, not just during a network partition.
+                </p>
+                <p class="mb-4">
+                    Thus, when developers adopt a weaker consistency model, they're usually not doing it "because of CAP," they're doing it to improve latency.
+                </p>
+                <p class="mb-4">
+                    This paper explains this concept in detail in the "PACELC" theorem:
+                    In case of a Partition (P), you have to choose between Availability (A) and Consistency (C), Else (E) between Latency (L) and Consistency (C).
+                </p>
+            </div>
+        </article>
+    </div>
+</body>
+</html>
