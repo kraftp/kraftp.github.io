@@ -127,6 +127,32 @@
                 </p>
             </div>
         </article>
+
+        <article class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">
+                <a href="https://www.usenix.org/system/files/conference/atc18/atc18-yang.pdf" class="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">
+                    NanoLog: A Nanosecond Scale Logging System
+                </a>
+            </h2>
+            <time datetime="2024-08-15" class="text-sm text-gray-500 mb-4 block">August 15th, 2024</time>
+            <div class="prose lg:prose-lg">
+                <p class="mb-4">
+                    This cool paper from John Ousterhout's group shows how to create an incredibly fast logging system. I like it because it combines deep performance analysis with clever optimizations to make a system as fast as possible. 
+                </p>
+                <p class="mb-4">
+                    NanoLog is implemented as a more-or-less drop-in replacement for printf that's ~100x faster.
+                    The key observation is that the vast majority of log messages are never actually read. Thus, NanoLog tries to do as little work as possible at logging time, deferring work to a postprocessor that runs when someone actually reads a log entry.
+                </p>
+                <p class="mb-4">
+                    When you log a message in NanoLog, it records only the dynamic part of the log message to an in-memory "staging buffer." To avoid overhead from synchronization or cache effects, these are single-consumer, single-producer per-thread circular buffers. Then, a background thread reads from each circular buffer, performs lightweight compression on each record, and writes it to disk.
+                    When you actually read a message, a postprocessor decompresses the records, interpolates them with the original static log message, and presents it to you just like a conventional logger.
+                </p>
+                <p class="mb-4">
+                    The paper has a detailed evaluation section showing which optimizations actually work. The key takeaway is that the combination of 1) only logging dynamic content, not static strings and 2) performing lightweight compression before writing to disk were the most effective optimizations.
+                    I wish more papers would do analyses like this, it's good science!
+                </p>
+            </div>
+        </article>
     </div>
 </body>
 </html>
