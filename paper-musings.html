@@ -224,6 +224,85 @@
                 </p>
             </div>
         </article>
+
+        <article class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">
+                <a href="https://15721.courses.cs.cmu.edu/spring2016/papers/a16-graefe.pdf" class="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">
+                    A Survey of B-Tree Locking Techniques
+                </a>
+            </h2>
+            <time datetime="2024-07-28" class="text-sm text-gray-500 mb-4 block">July 28, 2024</time>
+            <div class="prose lg:prose-lg">
+                <p class="mb-4">
+                    Want to learn how database locks actually work? Check out this incredibly thorough review by database legend Goetz Graefe, which dives deep into how databases use locks to protect your data and the integrity of your transactions.
+                </p>
+                <p class="mb-4">
+                    One of the most interesting distinctions in this paper is between locks and latches:
+                </p>
+                <ul class="list-disc list-inside mb-4">
+                    <li class="mb-2">
+                        <strong>Locks:</strong> Provide concurrency control between transactions. They're heavyweight, meant to be held for a long time, and support complex scheduling and deadlock detection policies. However, as a result, they're expensive to acquire and release, requiring thousands of CPU cycles.
+                    </li>
+                    <li class="mb-2">
+                        <strong>Latches:</strong> Protect individual data structures from concurrent accesses by different threads/processes. They're lightweight (tens of CPU cycles per acquire/release), are held only while the data structure is being read or updated, and have minimal scheduling or deadlock detection capabilities and thus must be used very carefully.
+                        You might grab a latch before physically modifying a B-tree page in memory to ensure no one else concurrently writes to that page.
+                    </li>
+                </ul>
+            </div>
+        </article>
+
+        <article class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">
+                <a href="https://db.cs.cmu.edu/papers/2017/p781-wu.pdf" class="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">
+                    An Empirical Evaluation of In-Memory Multi-Version Concurrency Control
+                </a>
+            </h2>
+            <time datetime="2024-07-23" class="text-sm text-gray-500 mb-4 block">July 23, 2024</time>
+            <div class="prose lg:prose-lg">
+                <p class="mb-4">
+                    I really like this paper because it dives deep into the most widely used type of concurrency control today: multi-version concurrency control (MVCC).
+                </p>
+                <p class="mb-4">
+                    The basic idea behind MVCC is for a database to store multiple versions of each data item so that transactions can read from items being written to by other transactions. This can greatly improve transaction throughput by allowing any number of reads to occur concurrently with a write.
+                </p>
+                <p class="mb-4">
+                    Of course, there are many ways to implement MVCC, and the paper describes several of the most popular approaches and their tradeoffs, with detailed experiments to show how much those tradeoffs matter in practice.
+                </p>
+                <p class="mb-4">
+                    When I was working on concurrency control in grad school, I spent a lot of time looking at this paper and its references to learn the field!
+                </p>
+            </div>
+        </article>
+
+        <article class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">
+                <a href="https://www.usenix.org/system/files/osdi22-huang-lexiang.pdf" class="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">
+                    Metastable Failures in the Wild
+                </a>
+            </h2>
+            <time datetime="2024-07-21" class="text-sm text-gray-500 mb-4 block">July 21, 2024</time>
+            <div class="prose lg:prose-lg">
+                <p class="mb-4">
+                    Want to learn how systems fail at scale? Check out this paper on metastable failures, a complex class of failures characteristic of big distributed systems. A metastable failure is a bad state that continues even after the triggering event is removed. For example, if an overloaded system continues to perform badly even after load decreases, that's a metastable failure.
+                </p>
+                <p class="mb-4">
+                    Here's a simple example of a metastable failure:
+                </p>
+                <ol class="list-decimal list-inside mb-4">
+                    <li>An application server is operating healthily, but near saturation.</li>
+                    <li>A network issue takes it offline for a few seconds.</li>
+                    <li>When the server comes back online, it experiences a huge surge of traffic from clients retrying failed requests.</li>
+                    <li>This surge may cause requests to time out, triggering more retries (if the retry policy is naive).</li>
+                    <li>This cascades and prevents the server from doing useful work until the retry policy is fixed.</li>
+                </ol>
+                <p class="mb-4">
+                    Notice how counterintuitive this is! The system was healthy until a brief outage happened, but that brief outage sent it into a catastrophic persistent failure even though nothing else about the system or workload changed.
+                </p>
+                <p class="mb-4">
+                    Check out the paper to see more examples, detailed real-world case studies, and proposed solutions!
+                </p>
+            </div>
+        </article>
     </div>
 </body>
 </html>
