@@ -27,6 +27,66 @@
                 By <a href="https://petereliaskraft.net/" class="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">Peter Kraft</a>
             </p>
         </header>
+
+        <article class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">
+                <a href="http://nms.csail.mit.edu/~stavros/pubs/OLTP_sigmod08.pdf" class="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">
+                    OLTP Through the Looking Glass, and What We Found There
+                </a>
+            </h2>
+            <time datetime="2024-09-15" class="text-sm text-gray-500 mb-4 block">2024/09/15</time>
+            <div class="prose lg:prose-lg">
+                <p class="mb-4">
+                    This paper by database legend Mike Stonebraker is an absolute classic. It profiles a transactional database in great detail, determining the purpose of each CPU instruction. The authors find that &lt;10% of CPU instructions are actually performing useful work. The remaining are split roughly evenly between four sources of overhead:
+                </p>
+                <ul class="list-disc list-inside mb-4">
+                    <li class="mb-2">Buffer management (moving pages between a buffer pool and disk)</li>
+                    <li class="mb-2">Locking (heavyweight row-level locks providing transaction concurrency control)</li>
+                    <li class="mb-2">Latching (lightweight locks protecting data structure internals from concurrent accesses)</li>
+                    <li class="mb-2">Logging (recording operations before executing them to enable recovery)</li>
+                </ul>
+                <p class="mb-4">
+                    One one hand, these results are discouraging because there's no "high pole in the tent." Overhead comes from multiple sources, all of which are critical for traditional database functionality. On the other hand, these results suggest a radically different database architecture that could achieve incredible performance: a database that's wholly in-memory (no buffer pool), single-threaded per-partition (no locking or latching) and replicated (no logging).
+                </p>
+                <p class="mb-4">
+                    This insight spawned a long-running research project (H-Store, and later VoltDB), which have shown that if you're willing to accept slightly less flexibility from your database, truly incredible performance is possible.
+                </p>
+            </div>
+        </article>
+
+        <article class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-2">
+                <a href="https://www.vldb.org/pvldb/vol11/p2209-kersten.pdf" class="text-blue-600 hover:text-blue-800 transition duration-300 ease-in-out">
+                    Everything You Always Wanted to Know About Compiled and Vectorized Queries But Were Afraid to Ask
+                </a>
+            </h2>
+            <time datetime="2024-09-13" class="text-sm text-gray-500 mb-4 block">2024/09/13</time>
+            <div class="prose lg:prose-lg">
+                <p class="mb-4">
+                    I like this paper because it goes out of its way to do a fair experimental comparison of two state-of-the-art query processing techniques: vectorization and data-centric code generation. These are two different ways of executing operations in in-memory columnar databases.
+                </p>
+                <p class="mb-4">
+                    At a high level, the difference between vectorization and data-centric code generation is that vectorized queries process many tuples at once, while code-generated/compiled queries process many operators at once.
+                </p>
+                <p class="mb-4">
+                    In systems that perform <strong>vectorization</strong>, each operation executes on a large batch--a vector--of data. For example, if you're summing a column, you might fetch 1000 numbers from the column at once and add them all up. The idea is to amortize iterator call overhead over many tuples and take advantage of CPU parallelism (SIMD).
+                </p>
+                <p class="mb-4">
+                    In systems that perform <strong>data-centric code generation</strong>, multiple operations are fused together and applied to each tuple one at a time. For example, if your query is for green cars with four tires, you might fuse those together into a tight loop that iterates through every record and checks both its color and its number of tires. The idea is to amortize iterator call overhead over many iterators and take advantage of compiler optimizations on the generated code.
+                </p>
+                <p class="mb-4">
+                    To really analyze both types of systems in a fair environment, the authors built two custom query engines that were identical in every way except their query execution strategy. They found that both strategies are good!
+                </p>
+                <ul class="list-disc list-inside mb-4">
+                    <li class="mb-2"><strong>Code generation:</strong> Slightly better for compute-intensive queries due to better cache performance for individual operations. Also works better for smaller (OLTP) queries because it's tuple-at-a-time.</li>
+                    <li class="mb-2"><strong>Vectorization:</strong> Slightly better at parallel data access for memory-bound queries and doesn't require a compilation step.</li>
+                </ul>
+                <p class="mb-4">
+                    But both work well and are used in widely adopted systems.
+                </p>
+            </div>
+        </article>
+        
         
         <article class="bg-white rounded-lg shadow-md p-6 mb-8 max-w-2xl mx-auto">
             <h2 class="text-2xl font-semibold text-gray-800 mb-2">
