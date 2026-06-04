@@ -20,7 +20,7 @@
    <!-- Fonts + Tailwind (Play CDN — no external CSS files needed) -->
    <link rel="preconnect" href="https://fonts.googleapis.com">
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet">
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
    <script src="https://cdn.tailwindcss.com"></script>
    <script>
       tailwind.config = {
@@ -28,7 +28,7 @@
             extend: {
                fontFamily: {
                   sans: ['Inter', 'system-ui', 'sans-serif'],
-                  display: ['Fraunces', 'Georgia', 'serif'],
+                  display: ['Lora', 'Georgia', 'serif'],
                },
                colors: {
                   accent: { DEFAULT: '#0d9488', dark: '#0f766e' },
@@ -44,7 +44,7 @@
    <!-- Nav -->
    <header class="sticky top-0 z-50 border-b border-slate-200/70 bg-slate-50/80 backdrop-blur">
       <nav class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-         <a href="#top" class="font-display text-lg font-semibold text-slate-900">Peter Kraft</a>
+         <a href="#top" class="font-display text-lg font-semibold text-slate-900 [font-variant-ligatures:none]">Peter Kraft</a>
          <div class="hidden items-center gap-7 text-sm font-medium text-slate-600 sm:flex">
             <a href="#about" class="transition hover:text-accent">About</a>
             <a href="#blog" class="transition hover:text-accent">Blog</a>
@@ -61,7 +61,7 @@
             <img src="images/Headshot_2024.JPG" alt="Peter Kraft"
                  class="h-44 w-44 flex-none rounded-full object-cover shadow-lg ring-4 ring-white sm:h-52 sm:w-52">
             <div class="text-center sm:text-left">
-               <h1 class="font-display text-5xl font-semibold tracking-tight text-slate-900 sm:text-6xl">Peter Kraft</h1>
+               <h1 class="font-display text-5xl font-semibold tracking-tight text-slate-900 [font-variant-ligatures:none] sm:text-6xl">Peter Kraft</h1>
                <p class="mt-4 max-w-xl text-lg leading-relaxed text-slate-600">
                   Co-founder & CTO of <a href="https://www.dbos.dev" class="font-medium text-accent hover:text-accent-dark">DBOS</a>
                   and Stanford CS PhD. Loves databases and distributed systems.
