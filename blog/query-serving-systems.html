@@ -101,7 +101,7 @@
             </p>
 
             <p>
-            One interesting observation we made about query serving systems is that they all include a great deal of custom-built infrastucture needed to run at large scale,
+            One interesting observation we made about query serving systems is that they all include a great deal of custom-built infrastructure needed to run at large scale,
             distributing data and queries across many machines. However, comparing across systems, we found that implementations of this distributed infrastructure are fundamentally <i>similar</i>.
             There's a basic distributed architecture shared by every system we looked at, one that arises naturally from the data parallelism of query serving workloads:
             they all partition data into many shards (where each shard stores data in a custom specialized data structure as discussed earlier),
