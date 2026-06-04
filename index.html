@@ -1,292 +1,303 @@
 <!DOCTYPE html>
-<!--[if lt IE 8 ]><html class="no-js ie ie7" lang="en"> <![endif]-->
-<!--[if IE 8 ]><html class="no-js ie ie8" lang="en"> <![endif]-->
-<!--[if (gte IE 8)|!(IE)]><!--><html class="no-js" lang="en"> <!--<![endif]-->
+<html lang="en" class="scroll-smooth">
 <head>
-
    <!-- Google tag (gtag.js) -->
    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YFNMMN8RYN"></script>
    <script>
    window.dataLayer = window.dataLayer || [];
    function gtag(){dataLayer.push(arguments);}
    gtag('js', new Date());
-
    gtag('config', 'G-YFNMMN8RYN');
    </script>
 
-   <!--- Basic Page Needs
-   ================================================== -->
    <meta charset="utf-8">
-	<title>Peter Kraft</title>
-	<meta name="description" content="">
-	<meta name="author" content="">
+   <title>Peter Kraft</title>
+   <meta name="description" content="Peter Kraft: Co-founder & CTO of DBOS and Stanford CS PhD.">
+   <meta name="author" content="Peter Kraft">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="canonical" href="https://petereliaskraft.net/">
+   <link rel="shortcut icon" href="favicon.png">
 
-   <!-- Mobile Specific Metas
-   ================================================== -->
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+   <!-- Structured data -->
+   <script type="application/ld+json">
+   {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Peter Kraft",
+      "url": "https://petereliaskraft.net/",
+      "image": "https://petereliaskraft.net/images/Headshot_2024.JPG",
+      "jobTitle": "Co-founder & CTO",
+      "worksFor": { "@type": "Organization", "name": "DBOS, Inc.", "url": "https://www.dbos.dev" },
+      "alumniOf": [
+         { "@type": "CollegeOrUniversity", "name": "Stanford University" },
+         { "@type": "CollegeOrUniversity", "name": "Harvard University" }
+      ],
+      "sameAs": [
+         "https://github.com/kraftp",
+         "https://twitter.com/petereliaskraft",
+         "https://www.linkedin.com/in/peter-kraft-dbos/",
+         "https://scholar.google.com/citations?user=K-KlWSsAAAAJ"
+      ]
+   }
+   </script>
 
-	<!-- CSS
-    ================================================== -->
-   <link rel="stylesheet" href="css/default.css">
-	<link rel="stylesheet" href="css/layout.css">
-   <link rel="stylesheet" href="css/media-queries.css">
-   <link rel="stylesheet" href="css/magnific-popup.css">
-
-   <!-- Favicons
-	================================================== -->
-	<link rel="shortcut icon" href="favicon.png" >
-
+   <!-- Fonts + Tailwind (prebuilt static stylesheet) -->
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+   <link rel="stylesheet" href="css/tailwind.css">
 </head>
 
-<body>
+<body class="bg-slate-50 font-sans text-slate-700 antialiased">
 
+   <!-- Nav -->
+   <header class="sticky top-0 z-50 border-b border-slate-200/70 bg-slate-50/80 backdrop-blur">
+      <nav class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+         <a href="#top" class="font-display text-lg font-semibold text-slate-900 [font-variant-ligatures:none]">Peter Kraft</a>
+         <div class="hidden items-center gap-7 text-sm font-medium text-slate-600 sm:flex">
+            <a href="#about" class="transition hover:text-accent">About</a>
+            <a href="#blog" class="transition hover:text-accent">Blog</a>
+            <a href="#publications" class="transition hover:text-accent">Publications</a>
+         </div>
+      </nav>
+   </header>
 
-   <!-- About Section
-   ================================================== -->
-   <section id="about">
+   <main id="top">
 
-      <div class="row">
+      <!-- Hero -->
+      <section class="mx-auto max-w-5xl px-6 pt-16 pb-12 sm:pt-24">
+         <div class="flex flex-col items-center gap-10 sm:flex-row sm:items-center sm:gap-14">
+            <img src="images/Headshot_2024.JPG" alt="Peter Kraft"
+                 class="h-44 w-44 flex-none rounded-full object-cover shadow-lg ring-4 ring-white sm:h-52 sm:w-52">
+            <div class="text-center sm:text-left">
+               <h1 class="font-display text-5xl font-semibold tracking-tight text-slate-900 [font-variant-ligatures:none] sm:text-6xl">Peter Kraft</h1>
+               <p class="mt-4 max-w-xl text-lg leading-relaxed text-slate-600">
+                  Co-founder & CTO of <a href="https://www.dbos.dev" class="font-medium text-accent hover:text-accent-dark">DBOS</a>
+                  and Stanford CS PhD. Loves databases and distributed systems.
+               </p>
+               <p class="mt-3 text-lg text-slate-500">peter.kraft [at] dbos.dev</p>
+               <div class="mt-6 flex flex-wrap items-center justify-center gap-3 sm:justify-start">
+                  <a href="https://github.com/kraftp" class="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-accent">
+                     <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/></svg>
+                     GitHub
+                  </a>
+                  <a href="https://twitter.com/petereliaskraft" class="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-accent">
+                     <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                     Twitter
+                  </a>
+                  <a href="https://www.linkedin.com/in/peter-kraft-dbos/" class="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-accent">
+                     <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                     LinkedIn
+                  </a>
+               </div>
+            </div>
+         </div>
+      </section>
 
-         <div class="three columns">
+      <!-- About -->
+      <section id="about" class="mx-auto max-w-5xl scroll-mt-20 px-6 py-12">
+         <h2 class="font-display text-3xl font-semibold text-slate-900">About</h2>
+         <div class="mt-6 space-y-5 text-lg leading-relaxed text-slate-600 [&_a]:font-medium [&_a]:text-accent [&_a:hover]:text-accent-dark">
+            <p>
+               I'm the co-founder and CTO of <a href="https://www.dbos.dev">DBOS</a>, helping developers build reliable software effortlessly.
+            </p>
+            <p>
+               I previously obtained a PhD in CS from Stanford, where I studied computer science (particularly databases and distributed systems) and was advised by <a href="https://cs.stanford.edu/~matei/">Matei Zaharia</a> and <a href="http://www.bailis.org/">Peter Bailis</a>.
+               <a href="https://qianli.dev/">Qian Li</a> and I led the <a href="https://dbos-project.github.io/">DBOS</a> academic project (<a href="res/dbos-cidr.pdf">CIDR 2022</a>, <a href="res/dbos-vldb.pdf">VLDB 2022</a>), which our startup is now commercializing.
+               I was particularly involved in <a href="https://github.com/DBOS-project/apiary">Epoxy</a> (<a href="res/p2732-kraft.pdf">VLDB 2023</a>) and <a href="https://github.com/DBOS-project/apiary">Apiary</a> (<a href="https://arxiv.org/abs/2208.13068">arXiv</a>).
+               Other projects I have worked on include
+               <a href="https://github.com/stanford-futuredata/Uniserve">Data-Parallel Actors</a> (<a href="res/uniserve.pdf">NSDI 2022</a>),
+               <a href="https://github.com/stanford-futuredata/POP">POP</a> (<a href="res/pop.pdf">SOSP 2021</a>),
+               <a href="https://github.com/stanford-futuredata/Willump">Willump</a> (<a href="res/willump.pdf">MLSys 2020</a>, <a href="res/willump-vldb-demo.pdf">VLDB 2020</a>),
+               <a href="https://macrobase.stanford.edu">MacroBase</a>
+               (<a href="res/diff.pdf">Best of VLDB 2019</a>)
+               and <a href="https://github.com/PlatformLab/Arachne">Arachne</a> (<a href="res/arachne.pdf">OSDI 2018</a>).
+               I did my undergrad at Harvard, where I worked with <a href="https://www.seltzer.com/margo/">Margo Seltzer</a>.
+            </p>
+         </div>
+      </section>
 
-            <img class="profile-pic"  src="images/Headshot_2024.JPG" alt="" />
+      <!-- Blog -->
+      <section id="blog" class="mx-auto max-w-5xl scroll-mt-20 px-6 py-12">
+         <h2 class="font-display text-3xl font-semibold text-slate-900">Blog Posts</h2>
+         <p class="mt-3 text-lg leading-relaxed text-slate-600">
+            I also blog for DBOS at <a href="https://www.dbos.dev/blog" class="font-medium text-accent hover:text-accent-dark">dbos.dev/blog</a>.
+         </p>
+         <ul class="mt-6 space-y-3">
+            <li class="group flex flex-col gap-1 rounded-xl border border-slate-200 bg-white p-5 transition hover:border-accent hover:shadow-md sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
+               <span>
+                  <a href="https://petereliaskraft.net/blog/epoxy" class="font-medium text-slate-900 hover:text-accent">How to Get Transactions Between (Almost) Any Data Stores</a>
+               </span>
+               <span class="flex-none text-sm text-slate-500">August 30, 2023</span>
+            </li>
+            <li class="group flex flex-col gap-1 rounded-xl border border-slate-200 bg-white p-5 transition hover:border-accent hover:shadow-md sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
+               <span>
+                  <a href="https://dbos-project.github.io/blog/mismatch-blog" class="font-medium text-slate-900 hover:text-accent">Your Infrastructure Should Know More About Your Database</a>
+                  <span class="text-sm text-slate-500">(w/ <a href="https://qianli.dev/" class="text-accent hover:text-accent-dark">Qian Li</a>)</span>
+               </span>
+               <span class="flex-none text-sm text-slate-500">December 9, 2022</span>
+            </li>
+            <li class="group flex flex-col gap-1 rounded-xl border border-slate-200 bg-white p-5 transition hover:border-accent hover:shadow-md sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
+               <span>
+                  <a href="https://dbos-project.github.io/blog/intro-blog.html" class="font-medium text-slate-900 hover:text-accent">DBOS: A Database-Oriented Operating System</a>
+                  <span class="text-sm text-slate-500">(w/ <a href="https://qianli.dev/" class="text-accent hover:text-accent-dark">Qian Li</a>)</span>
+               </span>
+               <span class="flex-none text-sm text-slate-500">September 3, 2022</span>
+            </li>
+            <li class="group flex flex-col gap-1 rounded-xl border border-slate-200 bg-white p-5 transition hover:border-accent hover:shadow-md sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
+               <span>
+                  <a href="https://petereliaskraft.net/blog/query-serving-systems" class="font-medium text-slate-900 hover:text-accent">Query Serving Systems: An Emerging Category of Data Systems</a>
+               </span>
+               <span class="flex-none text-sm text-slate-500">May 10, 2022</span>
+            </li>
+         </ul>
+      </section>
 
+      <!-- Publications -->
+      <section id="publications" class="mx-auto max-w-5xl scroll-mt-20 px-6 py-12">
+         <div class="flex flex-wrap items-baseline justify-between gap-x-4">
+            <h2 class="font-display text-3xl font-semibold text-slate-900">Publications</h2>
+            <p class="text-sm text-slate-500">* Denotes Equal Contribution</p>
          </div>
 
-         <div class="nine columns main-col">
+         <div class="mt-8 space-y-4">
 
-            <h2>About Me</h2>
+            <article class="rounded-xl border border-slate-200 bg-white p-5 transition hover:border-accent hover:shadow-md">
+               <a href="res/transactions_serverless_queue.pdf" class="font-medium text-slate-900 hover:text-accent">Transactions and Serverless are Made for Each Other</a>
+               <p class="mt-1 text-sm text-slate-600">Qian Li, <b class="text-slate-900">Peter Kraft</b></p>
+               <p class="mt-0.5 text-sm italic text-slate-500">ACM Queue</p>
+            </article>
 
-            <p>
-            I recently completed my PhD at Stanford and am now co-founding <a href="https://www.dbos.dev">DBOS, Inc.</a> to make it easy for developers to build scalable, reliable, and secure applications!
-            </p>
-            <p>
-            In graduate school, I studied computer science (particularly databases and systems research) and was advised by <a href="https://cs.stanford.edu/~matei/">Matei Zaharia</a> and <a href="http://www.bailis.org/">Peter Bailis</a>.
-            In my PhD, I worked on the <a href="https://dbos-project.github.io/">DBMS-oriented Operating System (DBOS)</a> academic project (<a href="res/dbos-cidr.pdf">CIDR 2022</a>, <a href="res/dbos-vldb.pdf">VLDB 2022</a>), which our startup is now commercializing.
-            I was particularly involved in <a href=https://github.com/DBOS-project/apiary>Epoxy</a> (<a href="res/p2732-kraft.pdf">VLDB 2023</a>) and <a href="https://github.com/DBOS-project/apiary">Apiary</a> (<a href="https://arxiv.org/abs/2208.13068">arXiv</a>).
-            Other projects I have worked on include 
-            <a href="https://github.com/stanford-futuredata/Uniserve">Data-Parallel Actors</a> (<a href="res/uniserve.pdf">NSDI 2022</a>),
-            <a href="https://github.com/stanford-futuredata/POP">POP</a> (<a href="res/pop.pdf">SOSP 2021</a>),
-            <a href="https://github.com/stanford-futuredata/Willump">Willump</a> (<a href="res/willump.pdf">MLSys 2020</a>, <a href="res/willump-vldb-demo.pdf">VLDB 2020</a>),
-            <a href="https://macrobase.stanford.edu">MacroBase</a>
-            (<a href="res/diff.pdf">Best of VLDB 2019</a>)
-            and <a href="https://github.com/PlatformLab/Arachne">Arachne</a> (<a href="res/arachne.pdf">OSDI 2018)</a>.
-            I did my undergrad at Harvard, where I worked with <a href="https://www.seltzer.com/margo/">Margo Seltzer</a>
-            on my <a href="res/Thesis.pdf">senior thesis</a>
-            and <a href="http://rush-nlp.com/">Alexander Rush</a> on
-            predicting congressional voting records from bill text
-            (<a href="res/bill_prediction.pdf">EMNLP 2016</a>).
-            </p>
+            <article class="rounded-xl border border-slate-200 bg-white p-5 transition hover:border-accent hover:shadow-md">
+               <a href="res/acorn.pdf" class="font-medium text-slate-900 hover:text-accent">ACORN: Performant and Predicate-Agnostic Search Over Vector Embeddings and Structured Data</a>
+               <p class="mt-1 text-sm text-slate-600">Liana Patel, <b class="text-slate-900">Peter Kraft</b>, Carlos Guestrin, Matei Zaharia</p>
+               <p class="mt-0.5 text-sm italic text-slate-500">SIGMOD 2024</p>
+            </article>
 
-            <h2><a href="paper-musings.html">Peter's Paper Musings</a></h2>
-            <p>A microblog of my favorite systems and database papers. Check it out <a href="paper-musings.html">here</a>!</p>
+            <article class="rounded-xl border border-slate-200 bg-white p-5 transition hover:border-accent hover:shadow-md">
+               <a href="res/p2732-kraft.pdf" class="font-medium text-slate-900 hover:text-accent">Epoxy: ACID Transactions Across Diverse Data Stores</a>
+               <p class="mt-1 text-sm text-slate-600"><b class="text-slate-900">Peter Kraft</b>, Qian Li, Xinjing Zhou, Peter Bailis, Michael Stonebraker, Xiangyao Yu, Matei Zaharia</p>
+               <p class="mt-0.5 text-sm italic text-slate-500">International Conference on Very Large Data Bases (VLDB) 2023</p>
+            </article>
 
-            <h2>Blog Posts</h2>
-            <p>
-            <ul>
-               <li>August 30, 2023 - <a href="https://petereliaskraft.net/blog/epoxy">How to Get Transactions Between (Almost) Any Data Stores</a></li>
-               <li>December 9, 2022 - <a href="https://dbos-project.github.io/blog/mismatch-blog">Your Infrastructure Should Know More About Your Database</a> (w/<a href="https://cs.stanford.edu/people/qianli/">Qian Li</a>)</li>
-               <li>September 3, 2022 - <a href="https://dbos-project.github.io/blog/intro-blog.html">DBOS: A Database-Oriented Operating System</a> (w/<a href="https://cs.stanford.edu/people/qianli/">Qian Li</a>)</li>
-               <li>May 10, 2022 - <a href="https://petereliaskraft.net/blog/query-serving-systems">Query Serving Systems: An Emerging Category of Data Systems</a></li>
-            </ul>
-            </p>
+            <article class="rounded-xl border border-slate-200 bg-white p-5 transition hover:border-accent hover:shadow-md">
+               <a href="res/p2761-li.pdf" class="font-medium text-slate-900 hover:text-accent">R<sup>3</sup>: Record-Replay-Retroaction for Database-Backed Applications</a>
+               <p class="mt-1 text-sm text-slate-600">Qian Li, <b class="text-slate-900">Peter Kraft</b>, Michael Cafarella, Çağatay Demiralp, Goetz Graefe, Christos Kozyrakis, Michael Stonebraker, Lalith Suresh, Xiangyao Yu, Matei Zaharia</p>
+               <p class="mt-0.5 text-sm italic text-slate-500">International Conference on Very Large Data Bases (VLDB) 2023</p>
+            </article>
 
-            <div class="row">
+            <article class="rounded-xl border border-slate-200 bg-white p-5 transition hover:border-accent hover:shadow-md">
+               <a href="res/vldb_parallelism.pdf" class="font-medium text-slate-900 hover:text-accent">Parallelism-Optimizing Data Placement for Faster Data-Parallel Computations</a>
+               <p class="mt-1 text-sm text-slate-600">Nirvik Baruah, <b class="text-slate-900">Peter Kraft</b>, Fiodar Kazhamiaka, Peter Bailis, Matei Zaharia</p>
+               <p class="mt-0.5 text-sm italic text-slate-500">International Conference on Very Large Data Bases (VLDB) 2023</p>
+            </article>
 
-               <div class="columns contact-details">
+            <article class="rounded-xl border border-slate-200 bg-white p-5 transition hover:border-accent hover:shadow-md">
+               <a href="res/cidr_lakehouse.pdf" class="font-medium text-slate-900 hover:text-accent">Analyzing and Comparing Lakehouse Storage Systems</a>
+               <p class="mt-1 text-sm text-slate-600">Paras Jain*, <b class="text-slate-900">Peter Kraft*</b>, Conor Power*, Tathagata Das, Ion Stoica, Matei Zaharia</p>
+               <p class="mt-0.5 text-sm italic text-slate-500">Conference on Innovative Data Systems Research (CIDR) 2023</p>
+            </article>
 
-                  <h2>Contact Details</h2>
-                  <p class="address">
-						   <span>Peter Kraft</span><br>
-                     <span>peter.kraft [at] dbos.dev</span>
-					   </p>
+            <article class="rounded-xl border border-slate-200 bg-white p-5 transition hover:border-accent hover:shadow-md">
+               <a href="res/debugger_cidr23.pdf" class="font-medium text-slate-900 hover:text-accent">Transactions Make Debugging Easy</a>
+               <p class="mt-1 text-sm text-slate-600">Qian Li, <b class="text-slate-900">Peter Kraft</b>, Michael Cafarella, Çağatay Demiralp, Goetz Graefe, Christos Kozyrakis, Michael Stonebraker, Lalith Suresh, Matei Zaharia</p>
+               <p class="mt-0.5 text-sm italic text-slate-500">Conference on Innovative Data Systems Research (CIDR) 2023</p>
+            </article>
 
-               </div>
+            <article class="rounded-xl border border-slate-200 bg-white p-5 transition hover:border-accent hover:shadow-md">
+               <a href="https://arxiv.org/abs/2208.13068" class="font-medium text-slate-900 hover:text-accent">Apiary: A DBMS-Backed Transactional Function-as-a-Service Framework</a>
+               <p class="mt-1 text-sm text-slate-600"><b class="text-slate-900">Peter Kraft*</b>, Qian Li*, Kostis Kaffes, Athinagoras Skiadopoulos, Deeptaanshu Kumar, Danny Cho, Jason Li, Robert Redmond, Nathan Weckwerth, Brian Xia, Peter Bailis, Michael Cafarella, Goetz Graefe, Jeremy Kepner, Christos Kozyrakis, Michael Stonebraker, Lalith Suresh, Xiangyao Yu, Matei Zaharia</p>
+               <p class="mt-0.5 text-sm italic text-slate-500">arXiv Preprint</p>
+            </article>
 
-               <div class="columns download">
-                  <p>
-                      <a href="https://github.com/kraftp" class="button"><i class="fa fa-github"></i>GitHub</a>
-                      <a href="https://twitter.com/petereliaskraft" class="button"><i class="fa fa-twitter"></i>Twitter</a>
-                      <a href="https://www.linkedin.com/in/peter-kraft-dbos/" class="button"><i class="fa fa-linkedin"></i>LinkedIn</a>
-                  </p>
-               </div>
+            <article class="rounded-xl border border-slate-200 bg-white p-5 transition hover:border-accent hover:shadow-md">
+               <a href="res/dbos-aidb.pdf" class="font-medium text-slate-900 hover:text-accent">Machine Learning with DBOS</a>
+               <p class="mt-1 text-sm text-slate-600">Robert Redmond, Nathan W. Weckwerth, Brian S. Xia, Qian Li, <b class="text-slate-900">Peter Kraft</b>, Deeptaanshu Kumar, Çağatay Demiralp, Michael Stonebraker</p>
+               <p class="mt-0.5 text-sm italic text-slate-500">International Workshop on Applied AI for Database Systems (AIDB) 2022</p>
+            </article>
 
-            </div> <!-- end row -->
+            <article class="rounded-xl border border-slate-200 bg-white p-5 transition hover:border-accent hover:shadow-md">
+               <a href="res/uniserve.pdf" class="font-medium text-slate-900 hover:text-accent">Data-Parallel Actors: A Programming Model for Scalable Query Serving Systems</a>
+               <p class="mt-1 text-sm text-slate-600"><b class="text-slate-900">Peter Kraft</b>, Fiodar Kazhamiaka, Peter Bailis, Matei Zaharia</p>
+               <p class="mt-0.5 text-sm italic text-slate-500">Symposium on Networked Systems Design and Implementation (NSDI) 2022</p>
+            </article>
 
-         </div> <!-- end .main-col -->
+            <article class="rounded-xl border border-slate-200 bg-white p-5 transition hover:border-accent hover:shadow-md">
+               <a href="res/dbos-cidr.pdf" class="font-medium text-slate-900 hover:text-accent">A Progress Report on DBOS: A DBMS-Oriented Operating System</a>
+               <p class="mt-1 text-sm text-slate-600">Qian Li*, <b class="text-slate-900">Peter Kraft*</b>, Kostis Kaffes*, Athinagoras Skiadopoulos, Deeptaanshu Kumar, Jason Li, Michael Cafarella, Goetz Graefe, Jeremy Kepner, Christos Kozyrakis, Michael Stonebraker, Lalith Suresh, Matei Zaharia</p>
+               <p class="mt-0.5 text-sm italic text-slate-500">Conference on Innovative Data Systems Research (CIDR) 2022</p>
+            </article>
 
-      </div>
+            <article class="rounded-xl border border-slate-200 bg-white p-5 transition hover:border-accent hover:shadow-md">
+               <a href="res/dbos-vldb.pdf" class="font-medium text-slate-900 hover:text-accent">DBOS: A DBMS-Oriented Operating System</a>
+               <p class="mt-1 text-sm text-slate-600">Athinagoras Skiadopoulos*, Qian Li*, <b class="text-slate-900">Peter Kraft*</b>, Kostis Kaffes*, Daniel Hong, Shana Matthew, David Bestor, Michael Cafarella, Vijay Gadepally, Goetz Graefe, Jeremy Kepner, Christos Kozyrakis, Tim Kraska, Michael Stonebraker, Lalith Suresh, Matei Zaharia</p>
+               <p class="mt-0.5 text-sm italic text-slate-500">International Conference on Very Large Data Bases (VLDB) 2022</p>
+            </article>
 
-   </section> <!-- About Section End-->
+            <article class="rounded-xl border border-slate-200 bg-white p-5 transition hover:border-accent hover:shadow-md">
+               <a href="res/pop.pdf" class="font-medium text-slate-900 hover:text-accent">Solving Large-Scale Granular Resource Allocation Problems Efficiently with POP</a>
+               <p class="mt-1 text-sm text-slate-600">Deepak Narayanan, Fiodar Kazhamiaka, Firas Abuzaid, <b class="text-slate-900">Peter Kraft</b>, Akshay Agrawal, Srikanth Kandula, Stephen Boyd, Matei Zaharia</p>
+               <p class="mt-0.5 text-sm italic text-slate-500">Symposium on Operating Systems Principles (SOSP) 2021</p>
+            </article>
 
+            <article class="rounded-xl border border-slate-200 bg-white p-5 transition hover:border-accent hover:shadow-md">
+               <a href="res/dbos-provenance.pdf" class="font-medium text-slate-900 hover:text-accent">Data Governance in a Database Operating System (DBOS)</a>
+               <p class="mt-1 text-sm text-slate-600">Deeptaanshu Kumar, Qian Li, Jason Li, <b class="text-slate-900">Peter Kraft</b>, Athinagoras Skiadopoulos, Lalith Suresh, Michael Cafarella, Michael Stonebraker</p>
+               <p class="mt-0.5 text-sm italic text-slate-500">VLDB Workshop on Polystore Systems (Poly) 2021</p>
+            </article>
 
-   <!-- Resume Section
-   ================================================== -->
-   <section id="education" class="resume">
+            <article class="rounded-xl border border-slate-200 bg-white p-5 transition hover:border-accent hover:shadow-md">
+               <a href="res/diff-journal.pdf" class="font-medium text-slate-900 hover:text-accent">DIFF: A Relational Interface for Large-Scale Data Explanation</a>
+               <p class="mt-1 text-sm text-slate-600">Firas Abuzaid, <b class="text-slate-900">Peter Kraft</b>, Sahaana Suri, Edward Gan, Eric Xu, Atul Shenoy, Asvin Ananthanarayan, John Sheu, Erik Meijer, Xi Wu, Jeff Naughton, Peter Bailis, Matei Zaharia</p>
+               <p class="mt-0.5 text-sm italic text-slate-500">The VLDB Journal, 2020. "Best of VLDB 2019" Special Issue</p>
+            </article>
 
-      <!-- Education
-       -->
-      <div class="row education">
+            <article class="rounded-xl border border-slate-200 bg-white p-5 transition hover:border-accent hover:shadow-md">
+               <a href="res/willump-vldb-demo.pdf" class="font-medium text-slate-900 hover:text-accent">A Demonstration of Willump: A Statistically-Aware End-to-end Optimizer for Machine Learning Inference</a>
+               <p class="mt-1 text-sm text-slate-600"><b class="text-slate-900">Peter Kraft</b>, Daniel Kang, Deepak Narayanan, Shoumik Palkar, Peter Bailis, Matei Zaharia</p>
+               <p class="mt-0.5 text-sm italic text-slate-500">International Conference on Very Large Data Bases (VLDB) 2020</p>
+            </article>
 
-         <div class="three columns header-col">
-            <h1><span>Publications</span></h1>
-            <p>* Denotes Equal Contribution</p>
+            <article class="rounded-xl border border-slate-200 bg-white p-5 transition hover:border-accent hover:shadow-md">
+               <a href="res/willump.pdf" class="font-medium text-slate-900 hover:text-accent">Willump: A Statistically-Aware End-to-end Optimizer for Machine Learning Inference</a>
+               <p class="mt-1 text-sm text-slate-600"><b class="text-slate-900">Peter Kraft</b>, Daniel Kang, Deepak Narayanan, Shoumik Palkar, Peter Bailis, Matei Zaharia</p>
+               <p class="mt-0.5 text-sm italic text-slate-500">Conference on Machine Learning and Systems (MLSys) 2020</p>
+            </article>
+
+            <article class="rounded-xl border border-slate-200 bg-white p-5 transition hover:border-accent hover:shadow-md">
+               <a href="res/diff.pdf" class="font-medium text-slate-900 hover:text-accent">DIFF: A Relational Interface for Large-Scale Data Explanation</a>
+               <p class="mt-1 text-sm text-slate-600">Firas Abuzaid, <b class="text-slate-900">Peter Kraft</b>, Sahaana Suri, Edward Gan, Eric Xu, Atul Shenoy, Asvin Ananthanarayan, John Sheu, Erik Meijer, Xi Wu, Jeff Naughton, Peter Bailis, Matei Zaharia</p>
+               <p class="mt-0.5 text-sm italic text-slate-500">International Conference on Very Large Data Bases (VLDB) 2019</p>
+            </article>
+
+            <article class="rounded-xl border border-slate-200 bg-white p-5 transition hover:border-accent hover:shadow-md">
+               <a href="res/arachne.pdf" class="font-medium text-slate-900 hover:text-accent">Arachne: Core-Aware Thread Management</a>
+               <p class="mt-1 text-sm text-slate-600">Henry Qin, Qian Li, Jacqueline Speiser, <b class="text-slate-900">Peter Kraft</b>, John Ousterhout</p>
+               <p class="mt-0.5 text-sm italic text-slate-500">Symposium on Operating Systems Design and Implementation (OSDI) 2018</p>
+            </article>
+
+            <article class="rounded-xl border border-slate-200 bg-white p-5 transition hover:border-accent hover:shadow-md">
+               <a href="res/Thesis.pdf" class="font-medium text-slate-900 hover:text-accent">Automatically Scalable Computation That Is More Scalable and Automatic</a>
+               <p class="mt-1 text-sm text-slate-600"><b class="text-slate-900">Peter Kraft</b></p>
+               <p class="mt-0.5 text-sm italic text-slate-500">Harvard University Senior Thesis. 2017</p>
+            </article>
+
+            <article class="rounded-xl border border-slate-200 bg-white p-5 transition hover:border-accent hover:shadow-md">
+               <a href="res/scotus_prediction.pdf" class="font-medium text-slate-900 hover:text-accent">Improving Supreme Court Forecasting Using Boosted Decision Trees</a>
+               <p class="mt-1 text-sm text-slate-600">Aaron Kaufman, <b class="text-slate-900">Peter Kraft</b>, Maya Sen</p>
+               <p class="mt-0.5 text-sm italic text-slate-500">Political Analysis. 2019</p>
+            </article>
+
+            <article class="rounded-xl border border-slate-200 bg-white p-5 transition hover:border-accent hover:shadow-md">
+               <a href="res/bill_prediction.pdf" class="font-medium text-slate-900 hover:text-accent">An Embedding Model For Predicting Roll-Call Votes</a>
+               <p class="mt-1 text-sm text-slate-600"><b class="text-slate-900">Peter Kraft</b>, Hirsh Jain, Alexander Rush</p>
+               <p class="mt-0.5 text-sm italic text-slate-500">Empirical Methods for Natural Language Processing (EMNLP) 2016</p>
+            </article>
+
          </div>
+      </section>
 
-         <div class="nine columns main-col">
-
-            <div class="row item">
-
-               <div class="twelve columns">
-
-                  <p>
-                     <a href=res/transactions_serverless_queue.pdf>Transactions and Serverless are Made for Each Other.</a><br>
-                     Qian Li, <b>Peter Kraft</b><br>
-                     <i>ACM Queue.</i>
-                     </p>
-
-                     <p>
-                     <a href=res/acorn.pdf>ACORN: Performant and Predicate-Agnostic Search Over Vector Embeddings and Structured Data.</a><br>
-                     Liana Patel, <b>Peter Kraft</b>, Carlos Guestrin, Matei Zaharia<br>
-                     <i>SIGMOD 2024. </i>
-                     </p>
-
-                     <p>
-                     <a href=res/p2732-kraft.pdf>Epoxy: ACID Transactions Across Diverse Data Stores.</a><br>
-                     <b>Peter Kraft</b>, Qian Li, Xinjing Zhou, Peter Bailis, Michael Stonebraker, Xiangyao Yu, Matei Zaharia<br>
-                     <i>International Conference on Very Large Data Bases (VLDB) 2023. </i>
-                     </p>
-
-               	   <p>
-                     <a href=res/p2761-li.pdf>R<sup>3</sup>: Record-Replay-Retroaction for Database-Backed Applications.</a><br>
-                     Qian Li, <b>Peter Kraft</b>, Michael Cafarella, Çağatay Demiralp, Goetz Graefe, Christos Kozyrakis, Michael Stonebraker, Lalith Suresh, Xiangyao Yu, Matei Zaharia.<br>
-                     <i>International Conference on Very Large Data Bases (VLDB) 2023. </i>
-                     </p>
-
-                     <p>
-                     <a href=res/vldb_parallelism.pdf>Parallelism-Optimizing Data Placement for Faster Data-Parallel Computations.</a><br>
-                     Nirvik Baruah, <b>Peter Kraft</b>, Fiodar Kazhamiaka, Peter Bailis, Matei Zaharia.<br>
-                     <i>International Conference on Very Large Data Bases (VLDB) 2023. </i>
-                     </p>
-
-                     <p>
-                     <a href=res/cidr_lakehouse.pdf>Analyzing and Comparing Lakehouse Storage Systems.</a><br>
-                     Paras Jain*, <b>Peter Kraft*</b>, Conor Power*, Tathagata Das, Ion Stoica, Matei Zaharia.<br>
-                     <i>Conference on Innovative Data Systems Research (CIDR) 2023.</i>
-                     </p>
-
-                     <p>
-                     <a href=res/debugger_cidr23.pdf>Transactions Make Debugging Easy.</a><br>
-                     Qian Li, <b>Peter Kraft</b>, Michael Cafarella, Çağatay Demiralp, Goetz Graefe, Christos Kozyrakis, Michael Stonebraker, Lalith Suresh, Matei Zaharia.<br>
-                     <i>Conference on Innovative Data Systems Research (CIDR) 2023.</i>
-                     </p>
-
-
-                     <p>
-                     <a href=https://arxiv.org/abs/2208.13068>Apiary: A DBMS-Backed Transactional Function-as-a-Service Framework.</a><br>
-                     <b>Peter Kraft*</b>, Qian Li*, Kostis Kaffes, Athinagoras Skiadopoulos, Deeptaanshu Kumar, Danny Cho, Jason Li, Robert Redmond, Nathan Weckwerth, Brian Xia, Peter Bailis, Michael Cafarella, Goetz Graefe, Jeremy Kepner, Christos Kozyrakis, Michael Stonebraker, Lalith Suresh, Xiangyao Yu, Matei Zaharia.<br>
-                     <i>arXiv Preprint. </i>
-                     </p>
-
-                     <p>
-                     <a href=res/dbos-aidb.pdf>Machine Learning with DBOS.</a><br>
-                     Robert Redmond, Nathan W. Weckwerth, Brian S. Xia, Qian Li, <b>Peter Kraft</b>, Deeptaanshu Kumar, Çağatay Demiralp, Michael Stonebraker.<br>
-                     <i>International Workshop on Applied AI for Database Systems (AIDB) 2022</i>
-                     </p>
-
-                     <p>
-                     <a href=res/uniserve.pdf>Data-Parallel Actors: A Programming Model for Scalable Query Serving Systems.</a><br>
-                     <b>Peter Kraft</b>, Fiodar Kazhamiaka, Peter Bailis, Matei Zaharia.<br>
-                     <i>Symposium on Networked Systems Design and Implementation (NSDI) 2022. </i>
-                     </p>
-
-                     <p>
-                     <a href=res/dbos-cidr.pdf>A Progress Report on DBOS: A DBMS-Oriented Operating System.</a><br>
-                     Qian Li*, <b>Peter Kraft*</b>, Kostis Kaffes*, Athinagoras Skiadopoulos, Deeptaanshu Kumar, Jason Li, Michael Cafarella, Goetz Graefe, Jeremy Kepner, Christos Kozyrakis,
-                     Michael Stonebraker, Lalith Suresh, Matei Zaharia.<br>
-                     <i>Conference on Innovative Data Systems Research (CIDR) 2022. </i>
-                     </p>
-
-                     <p>
-                     <a href=res/dbos-vldb.pdf>DBOS: A DBMS-Oriented Operating System.</a><br>
-                     Athinagoras Skiadopoulos*, Qian Li*, <b>Peter Kraft*</b>, Kostis Kaffes*, Daniel Hong, Shana Matthew, David Bestor, Michael Cafarella, Vijay Gadepally, Goetz Graefe, Jeremy Kepner,
-                     Christos Kozyrakis, Tim Kraska, Michael Stonebraker, Lalith Suresh, Matei Zaharia.<br>
-                     <i>International Conference on Very Large Data Bases (VLDB) 2022. </i>
-                     </p>
-
-                     <p>
-                     <a href=res/pop.pdf>Solving Large-Scale Granular Resource Allocation Problems Efficiently with POP.</a><br>
-                     Deepak Narayanan, Fiodar Kazhamiaka, Firas Abuzaid, <b>Peter Kraft</b>, Akshay Agrawal, Srikanth Kandula, Stephen Boyd, Matei Zaharia.<br>
-                     <i>Symposium on Operating Systems Principles (SOSP) 2021. </i>
-                     </p>
-
-                     <p>
-                     <a href=res/dbos-provenance.pdf>Data Governance in a Database Operating System (DBOS).</a><br>
-                     Deeptaanshu Kumar, Qian Li, Jason Li, <b>Peter Kraft</b>, Athinagoras Skiadopoulos, Lalith Suresh, Michael Cafarella, Michael Stonebraker.<br>
-                     <i>VLDB Workshop on Polystore Systems (Poly) 2021. </i>
-                     </p>
-
-               	   <p>
-                     <a href=res/diff-journal.pdf>DIFF:  A Relational Interface for Large-Scale Data Explanation.</a><br>
-                     Firas Abuzaid, <b>Peter Kraft</b>, Sahaana Suri, Edward Gan, Eric Xu, Atul Shenoy,
-                     Asvin Ananthanarayan, John Sheu, Erik Meijer, Xi Wu, Jeff Naughton, Peter Bailis, Matei Zaharia.<br>
-                     <i>The VLDB Journal, 2020.  "Best of VLDB 2019" Special Issue.</i>
-                     </p>
-
-                  	<p>
-                     <a href=res/willump-vldb-demo.pdf>A Demonstration of Willump:  A Statistically-Aware End-to-end Optimizer for Machine Learning Inference.</a><br>
-                     <b>Peter Kraft</b>, Daniel Kang, Deepak Narayanan, Shoumik Palkar, Peter Bailis, Matei Zaharia.<br>
-                     <i>International Conference on Very Large Data Bases (VLDB) 2020.</i>
-                     </p>
-
-                     <p>
-                     <a href=res/willump.pdf>Willump:  A Statistically-Aware End-to-end Optimizer for Machine Learning Inference.</a><br>
-                     <b>Peter Kraft</b>, Daniel Kang, Deepak Narayanan, Shoumik Palkar, Peter Bailis, Matei Zaharia.<br>
-                     <i>Conference on Machine Learning and Systems (MLSys) 2020.</i>
-                     </p>
-
-                     <p>
-                     <a href=res/diff.pdf>DIFF:  A Relational Interface for Large-Scale Data Explanation.</a><br>
-                     Firas Abuzaid, <b>Peter Kraft</b>, Sahaana Suri, Edward Gan, Eric Xu, Atul Shenoy,
-                     Asvin Ananthanarayan, John Sheu, Erik Meijer, Xi Wu, Jeff Naughton, Peter Bailis, Matei Zaharia.<br>
-                     <i>International Conference on Very Large Data Bases (VLDB) 2019.</i>
-                     </p>
-
-                     <p>
-                     <a href=res/arachne.pdf>Arachne:  Core-Aware Thread Management.</a><br>
-                     Henry Qin, Qian Li, Jacqueline Speiser, <b>Peter Kraft</b>, John Ousterhout.<br>
-                     <i>Symposium on Operating Systems Design and Implementation (OSDI) 2018. </i>
-                     </p>
-
-                     <p>
-                     <a href="res/Thesis.pdf">Automatically Scalable Computation That Is More Scalable and Automatic.</a><br>
-                     <b> Peter Kraft.</b><br>
-                     <i>Harvard University Senior Thesis</i>. 2017.
-                     </p>
-
-                     <p>
-                     <a href=res/scotus_prediction.pdf>Improving Supreme Court Forecasting Using Boosted Decision Trees.</a><br>
-                     Aaron Kaufman, <b>Peter Kraft</b>, Maya Sen.<br>
-                     <i>Political Analysis</i>.  2019.
-                     </p>
-
-                     <p>
-                     <a href="res/bill_prediction.pdf">An Embedding Model For Predicting Roll-Call Votes.</a><br>
-                     <b>Peter Kraft</b>, Hirsh Jain, Alexander Rush.<br>
-                     <i>Empirical Methods for Natural Language Processing (EMNLP) 2016.</i>
-                     </p>
-
-               </div>
-
-            </div> <!-- item end -->
-
-         </div> <!-- main-col end -->
-
-      </div> <!-- End Education -->
-   </section> <!-- Education Section End-->
-
-      <footer>Inspired by <a title="Styleshout" href="http://www.styleshout.com/">Styleshout</a></footer>
+   </main>
 
 </body>
-
 </html>

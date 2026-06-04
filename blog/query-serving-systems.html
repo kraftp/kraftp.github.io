@@ -1,206 +1,164 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
+   <!-- Google tag (gtag.js) -->
+   <script async src="https://www.googletagmanager.com/gtag/js?id=G-YFNMMN8RYN"></script>
+   <script>
+   window.dataLayer = window.dataLayer || [];
+   function gtag(){dataLayer.push(arguments);}
+   gtag('js', new Date());
+   gtag('config', 'G-YFNMMN8RYN');
+   </script>
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YFNMMN8RYN"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+   <meta charset="utf-8">
+   <title>Query Serving Systems</title>
+   <meta name="description" content="Query serving systems: an emerging category of data systems that serve data-parallel, low-latency queries.">
+   <meta name="author" content="Peter Kraft">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="canonical" href="https://petereliaskraft.net/blog/query-serving-systems">
+   <link rel="shortcut icon" href="../favicon.png">
 
-    gtag('config', 'G-YFNMMN8RYN');
-    </script>
-
-    <!--- basic page needs
-    ================================================== -->
-    <meta charset="utf-8">
-    <title>Query Serving Systems</title>
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <!-- mobile specific metas
-    ================================================== -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- CSS
-    ================================================== -->
-    <link rel="stylesheet" href="../css/vendor.css">
-    <link rel="stylesheet" href="../css/styles.css">
-
-
-   <!-- Favicons
-    ================================================== -->
-    <link rel="shortcut icon" href="../favicon.png" >
-
+   <!-- Fonts + Tailwind (prebuilt static stylesheet) -->
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+   <link rel="stylesheet" href="../css/tailwind.css">
 </head>
 
-<body id="top">
+<body id="top" class="bg-slate-50 font-sans text-slate-700 antialiased">
 
+   <!-- Nav -->
+   <header class="sticky top-0 z-50 border-b border-slate-200/70 bg-slate-50/80 backdrop-blur">
+      <nav class="mx-auto flex max-w-3xl items-center justify-between px-6 py-4">
+         <a href="https://petereliaskraft.net" class="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition hover:text-accent">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            Peter Kraft
+         </a>
+         <a href="https://petereliaskraft.net/res/uniserve.pdf" class="text-sm font-medium text-accent hover:text-accent-dark">Read the paper →</a>
+      </nav>
+   </header>
 
-    <!-- content
-    ================================================== -->
-    <section class="s-content">
+   <main>
+      <article class="mx-auto max-w-3xl px-6 py-14">
 
-        <div class="row">
-            <div class="column large-12">
+         <!-- Header -->
+         <header class="text-center">
+            <h1 class="font-display text-4xl font-semibold leading-tight tracking-tight text-slate-900 sm:text-5xl">Query Serving Systems:<br>An Emerging Category of Data Systems</h1>
+            <div class="mt-6 flex items-center justify-center gap-3 text-sm text-slate-500">
+               <a href="https://petereliaskraft.net"><img src="../images/Professional_Profile_2018.jpg" alt="Peter Kraft" class="h-10 w-10 rounded-full object-cover"></a>
+               <div class="text-left">
+                  <a href="https://petereliaskraft.net" class="block font-medium text-slate-900 hover:text-accent">Peter Kraft</a>
+                  <span>May 10, 2022</span>
+               </div>
+            </div>
+         </header>
 
-                <article class="s-content__entry format-standard">
+         <!-- Body -->
+         <div class="mt-12 space-y-6 text-lg leading-relaxed text-slate-700 [&_a]:font-medium [&_a]:text-accent [&_a:hover]:text-accent-dark [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6 [&_li]:pl-1">
 
-                    <div class="s-content__entry-header">
-                        <h1 class="s-content__title s-content__title--post">Query Serving Systems:<br>An Emerging Category of Data Systems</h1>
-                    </div> <!-- end s-content__entry-header -->
+            <p>
+            These days, people are building more kinds of databases and data systems than anyone can count.
+            We have OLTP systems like <a href="https://www.cockroachlabs.com/">CockroachDB</a> and the classic <a href="https://www.postgresql.org/">Postgres</a>,
+            OLAP systems like <a href="https://druid.apache.org/">Druid</a> and <a href="https://clickhouse.com/">Clickhouse</a>,
+            search systems like <a href="https://www.elastic.co/">ElasticSearch</a> and <a href="https://solr.apache.org/">Solr</a>,
+            NoSQL databases like <a href="https://www.mongodb.com/">MongoDB</a> and <a href="https://cassandra.apache.org">Cassandra</a>,
+            vector databases like <a href="https://www.pinecone.io/">Pinecone</a> and <a href="https://vespa.ai/">Vespa</a>,
+            graph databases like <a href="https://neo4j.com/">Neo4j</a> and <a href="https://dgraph.io/">Dgraph</a>,
+            data lakes like <a href="https://delta.io/">Delta Lake</a> and <a href="https://hudi.apache.org/">Hudi</a>,
+            data warehouses like <a href="https://www.snowflake.com/">Snowflake</a> and <a href="https://aws.amazon.com/redshift/">Redshift</a>,
+            and many others besides (including <a href="https://cs.stanford.edu/~matei/papers/2021/cidr_lakehouse.pdf">data lakehouses!</a>).
+            What I want to do in this blog post is impose a bit of order on the chaos
+            and propose that many of these systems, which on the surface appear different,
+            actually belong to one category with several useful shared properties: a category we call <i>query serving systems</i>.
+            </p>
 
-                    <div class="s-content__primary">
+            <p>
+            At a high level, query serving systems serve data-parallel, low-latency queries. To make this more concrete, let's define them by these three properties:
+            </p>
 
-                        <div class="s-content__entry-content">
+            <ol>
+               <li>Query serving systems serve large <i>data-parallel</i> queries:
+               queries are naturally parallelizable because they apply the same operation to multiple data items,
+               and each query accesses gigabytes to terabytes of data.</li>
+               <li>Query serving systems are <i>specialized for low latency</i>. They target a particular problem domain and can run large data-parallel queries in that domain in milliseconds to seconds with the help
+               of highly optimized custom data representations.</li>
+               <li>Query serving systems manage <i>batch data updates</i>. Updates are regular but can be batched, so highly concurrent conflicting writes are rarely a problem.</li>
+            </ol>
 
-                            <p>
-                            These days, people are building more kinds of databases and data systems than anyone can count.
-                            We have OLTP systems like <a href="https://www.cockroachlabs.com/">CockroachDB</a> and the classic <a href="https://www.postgresql.org/">Postgres</a>,
-                            OLAP systems like <a href="https://druid.apache.org/">Druid</a> and <a href="https://clickhouse.com/">Clickhouse</a>,
-                            search systems like <a href="https://www.elastic.co/">ElasticSearch</a> and <a href="https://solr.apache.org/">Solr</a>, 
-                            NoSQL databases like <a href="https://www.mongodb.com/">MongoDB</a> and <a href="https://cassandra.apache.org">Cassandra</a>,
-                            vector databases like <a href="https://www.pinecone.io/">Pinecone</a> and <a href="https://vespa.ai/">Vespa</a>,
-                            graph databases like <a href="https://neo4j.com/">Neo4j</a> and <a href="https://dgraph.io/">Dgraph</a>,
-                            data lakes like <a href="https://delta.io/">Delta Lake</a> and <a href="https://hudi.apache.org/">Hudi</a>,
-                            data warehouses like <a href="https://www.snowflake.com/">Snowflake</a> and <a href="https://aws.amazon.com/redshift/">Redshift</a>,
-                            and many others besides (including <a href="https://cs.stanford.edu/~matei/papers/2021/cidr_lakehouse.pdf">data lakehouses!</a>).
-                            What I want to do in this blog post is impose a bit of order on the chaos
-                            and propose that many of these systems, which on the surface appear different,
-                            actually belong to one category with several useful shared properties: a category we call <i>query serving systems</i>.
-                            </p> 
-    
-                            <p>
-                            At a high level, query serving systems serve data-parallel, low-latency queries.  To make this more concrete, let's define them by these three properties:
-                            </p>
-                            
-                            <ol>
-                                <li>Query serving systems serve large <i>data-parallel</i> queries:
-                                queries are naturally parallelizable because they apply the same operation to multiple data items,
-                                and each query accesses gigabytes to terabytes of data.</li>
-                                <li>Query serving systems are <i>specialized for low latency</i>.  They target a particular problem domain and can run large data-parallel queries in that domain in milliseconds to seconds with the help
-                                of highly optimized custom data representations.</li>
-                                <li>Query serving systems manage <i>batch data updates</i>.  Updates are regular but can be batched, so highly concurrent conflicting writes are rarely a problem.</li>
-                            </ol>
+            <p>
+            Once you know what to look for, it becomes clear that a lot of different systems have all three of these properties!
+            For example, a full-text search system like <a href="https://solr.apache.org/">Apache Solr</a> or <a href="https://www.elastic.co/">ElasticSearch</a>
+            performs queries that apply the same operation, a search, to every document;
+            uses specialized data structures like <a href="https://en.wikipedia.org/wiki/Inverted_index">inverted indexes</a> to store documents and optimize search performance;
+            and has append-mostly data ingest.
+            A real-time OLAP database like <a href="https://druid.apache.org/">Apache Druid</a>
+            performs aggregation queries that apply the same operations, like sums or group-bys, to every record;
+            uses an <a href="http://static.druid.io/docs/druid.pdf">optimized compressed columnar format</a> to run these queries
+            <a href="https://imply.io/blog/performance-benchmark-druid-presto-hive/">orders of magnitude faster</a> than non-specialized systems;
+            and has append-only data ingest. Many other systems similarly share these properties, including timeseries databases
+            like <a href="https://www.influxdata.com/">InfluxDB</a> and <a href="http://opentsdb.net/">OpenTSDB</a>, <a href="https://www.pinecone.io/learn/vector-database/">vector databases</a>
+            like <a href="https://www.pinecone.io/">Pinecone</a> and <a href="https://vespa.ai/">Vespa</a>, and even some (but not all) graph databases.
+            </p>
 
-    
-                            <p>
-                            Once you know what to look for, it becomes clear that a lot of different systems have all three of these properties!
-                            For example, a full-text search system like <a href="https://solr.apache.org/">Apache Solr</a> or <a href="https://www.elastic.co/">ElasticSearch</a>
-                            performs queries that apply the same operation, a search, to every document;
-                            uses specialized data structures like <a href="https://en.wikipedia.org/wiki/Inverted_index">inverted indexes</a> to store documents and optimize search performance; 
-                            and has append-mostly data ingest.
-                            A real-time OLAP database like <a href="https://druid.apache.org/">Apache Druid</a>
-                            performs aggregation queries that apply the same operations, like sums or group-bys, to every record;
-                            uses an <a href="http://static.druid.io/docs/druid.pdf">optimized compressed columnar format</a> to run these queries
-                            <a href="https://imply.io/blog/performance-benchmark-druid-presto-hive/">orders of magnitude faster</a> than non-specialized systems;
-                            and has append-only data ingest.  Many other systems similarly share these properties, including timeseries databases
-                            like <a href="https://www.influxdata.com/">InfluxDB</a> and <a href="http://opentsdb.net/">OpenTSDB</a>, <a href="https://www.pinecone.io/learn/vector-database/">vector databases</a>
-                            like <a href="https://www.pinecone.io/">Pinecone</a> and <a href="https://vespa.ai/">Vespa</a>, and even some (but not all) graph databases.
-                            </p>
-    
-                            <p>
-                            One interesting observation we made about query serving systems is that they all include a great deal of custom-built infrastucture needed to run at large scale,
-                            distributing data and queries across many machines.  However, comparing across systems, we found that implementations of this distributed infrastructure are fundamentally <i>similar</i>.
-                            There's a basic distributed architecture shared by every system we looked at, one that arises naturally from the data parallelism of query serving workloads:
-                            they all partition data into many shards (where each shard stores data in a custom specialized data structure as discussed earlier),
-                            provide consistent and durable fault-tolerant updates for data stored in shards,
-                            replicate shards for high availability,
-                            and provide fault-tolerant distributed queries that run in a data-parallel fashion over many shards.
-                            To make this a bit clearer, we diagram below a data-parallel query executing over sharded data;
-                            the query serving system is responsible for distributing each query over many shards
-                            and for managing the data stored in the shards, updating it and keeping it available.
-                            </p>
+            <p>
+            One interesting observation we made about query serving systems is that they all include a great deal of custom-built infrastructure needed to run at large scale,
+            distributing data and queries across many machines. However, comparing across systems, we found that implementations of this distributed infrastructure are fundamentally <i>similar</i>.
+            There's a basic distributed architecture shared by every system we looked at, one that arises naturally from the data parallelism of query serving workloads:
+            they all partition data into many shards (where each shard stores data in a custom specialized data structure as discussed earlier),
+            provide consistent and durable fault-tolerant updates for data stored in shards,
+            replicate shards for high availability,
+            and provide fault-tolerant distributed queries that run in a data-parallel fashion over many shards.
+            To make this a bit clearer, we diagram below a data-parallel query executing over sharded data;
+            the query serving system is responsible for distributing each query over many shards
+            and for managing the data stored in the shards, updating it and keeping it available.
+            </p>
 
-                            <p>
-                                <img src="../images/UniserveBlogPost/UniserveBlogPost.jpg" 
-                                         sizes="(max-width: 2100px) 100vw, 2100px" alt="">
-                            </p>
+            <figure class="my-8">
+               <img src="../images/UniserveBlogPost/UniserveBlogPost.jpg" alt="Data-parallel query executing over sharded data" class="mx-auto w-full rounded-lg">
+            </figure>
 
-                            <p>
-                            The ubiquity of this architecture is interesting because it implies we can encapsulate the distributed parts of different query serving systems in a common, modular abstraction,
-                            making scalable query serving systems much easier to build because developers could use this abstraction instead of writing custom distributed code for each new system.
-                            I've been investigating the question of whether a common abstraction is possible, and I recently published a paper
-                            (at the conference <a href="https://www.usenix.org/conference/nsdi22">NSDI '22</a>) about one possible abstraction,
-                            called <a href="https://petereliaskraft.net/res/uniserve.pdf">data-parallel actors (DPA)</a>.
-                            The high-level idea is that we can represent a distributed query serving system as a collection of stateful
-                            <i>actors</i> where each actor is an opaque object encapsulating a partition or shard of data stored in some custom format like a Solr inverted index.
-                            By providing distributed guarantees (e.g., consistency and durability for updates) over data stored in actors and defining a set of generic parallel operators
-                            from which developers can construct any data-parallel query, DPA aims to make it possible to build a distributed query serving system from single-node components.
-                            To show DPA works, we ported several existing query serving systems (including Solr and Druid) to it and also used it to build
-                            a simplified data warehouse based on the single-node column store <a href="https://www.monetdb.org/">MonetDB</a>.
-                            If this sounds interesting and you want to read more, there are a lot more details in  <a href="https://petereliaskraft.net/res/uniserve.pdf">the paper</a>!
-                            You can also check out our <a href="https://github.com/stanford-futuredata/Uniserve">source code</a> or my <a href=https://www.youtube.com/watch?v=1_OA63YZtNg>NSDI talk</a>.
-                            </p>
+            <p>
+            The ubiquity of this architecture is interesting because it implies we can encapsulate the distributed parts of different query serving systems in a common, modular abstraction,
+            making scalable query serving systems much easier to build because developers could use this abstraction instead of writing custom distributed code for each new system.
+            I've been investigating the question of whether a common abstraction is possible, and I recently published a paper
+            (at the conference <a href="https://www.usenix.org/conference/nsdi22">NSDI '22</a>) about one possible abstraction,
+            called <a href="https://petereliaskraft.net/res/uniserve.pdf">data-parallel actors (DPA)</a>.
+            The high-level idea is that we can represent a distributed query serving system as a collection of stateful
+            <i>actors</i> where each actor is an opaque object encapsulating a partition or shard of data stored in some custom format like a Solr inverted index.
+            By providing distributed guarantees (e.g., consistency and durability for updates) over data stored in actors and defining a set of generic parallel operators
+            from which developers can construct any data-parallel query, DPA aims to make it possible to build a distributed query serving system from single-node components.
+            To show DPA works, we ported several existing query serving systems (including Solr and Druid) to it and also used it to build
+            a simplified data warehouse based on the single-node column store <a href="https://www.monetdb.org/">MonetDB</a>.
+            If this sounds interesting and you want to read more, there are a lot more details in <a href="https://petereliaskraft.net/res/uniserve.pdf">the paper</a>!
+            You can also check out our <a href="https://github.com/stanford-futuredata/Uniserve">source code</a> or my <a href="https://www.youtube.com/watch?v=1_OA63YZtNg">NSDI talk</a>.
+            </p>
 
-                            <p>
-                            Zooming out, I think that DPA and systems like it are promising,
-                            but even if we don't end up building all query serving systems with a common abstraction, I hope that recognizing their similarities encourages
-                            researchers and engineers to view query serving systems in a new light and build modular infrastructure targeting them.
-                            For example, I'm currently working with some other people at Stanford on a general-purpose data placement algorithm for query serving systems
-                            that improves latency by maximizing query parallelism, spreading out shards that are frequently queried together.
-                            I suspect that it may also be possible to come up with interesting new general-purpose approaches for query serving system auto-scaling
-                            and incremental view maintenance.
-                            More broadly, I hope it's useful for query serving system developers to know that a large class of their problems are shared
-                            and they can look to other systems (and hopefully in the future, to general-purpose frameworks like DPA) for inspiration.
-                            </p>
+            <p>
+            Zooming out, I think that DPA and systems like it are promising,
+            but even if we don't end up building all query serving systems with a common abstraction, I hope that recognizing their similarities encourages
+            researchers and engineers to view query serving systems in a new light and build modular infrastructure targeting them.
+            For example, I'm currently working with some other people at Stanford on a general-purpose data placement algorithm for query serving systems
+            that improves latency by maximizing query parallelism, spreading out shards that are frequently queried together.
+            I suspect that it may also be possible to come up with interesting new general-purpose approaches for query serving system auto-scaling
+            and incremental view maintenance.
+            More broadly, I hope it's useful for query serving system developers to know that a large class of their problems are shared
+            and they can look to other systems (and hopefully in the future, to general-purpose frameworks like DPA) for inspiration.
+            </p>
 
-                        </div> <!-- end s-entry__entry-content -->
+         </div>
+      </article>
+   </main>
 
+   <!-- Footer -->
+   <footer class="border-t border-slate-200 py-8">
+      <div class="mx-auto flex max-w-3xl items-center justify-between px-6 text-sm text-slate-400">
+         <span>By <a href="https://petereliaskraft.net" class="font-medium text-slate-500 hover:text-accent">Peter Kraft</a></span>
+         <a href="#top" class="inline-flex items-center gap-1 hover:text-accent">
+            Back to top
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
+         </a>
+      </div>
+   </footer>
 
-                        <div class="s-content__entry-meta">
-
-                            <div class="entry-author meta-blk">
-                                <div class="author-avatar">
-                                    <a href="https://petereliaskraft.net"><img class="avatar" src="../images/Professional_Profile_2018.jpg" alt=""></a>
-                                </div>
-                                <div class="byline">
-                                    <span>By</span>
-                                    <a href="https://petereliaskraft.net">Peter Kraft</a>
-                                </div>
-                            </div>
-
-                            <div class="meta-bottom">
-                                
-                                <div class="entry-cat-links meta-blk">
-
-                                    <span>On</span>
-                                    May 10, 2022
-                                </div>
-
-                            </div>
-
-                        </div> <!-- s-content__entry-meta -->
-
-                    </div> <!-- end s-content__primary -->
-                </article> <!-- end entry -->
-
-            </div> <!-- end column -->
-        </div> <!-- end row -->
-    </section> <!-- end s-content -->
-
-    <!-- footer
-    ================================================== -->
-    <footer class="s-footer">
-        <div class="s-footer__bottom">
-            <div class="row">
-                <div class="column">
-                    <div class="ss-copyright">
-                        <span>By <a href="https://petereliaskraft.net">Peter Kraft</a></span> 
-                        <span>Design by <a href="https://www.styleshout.com/">StyleShout</a></span>
-                    </div> <!-- end ss-copyright -->
-                </div>
-            </div> 
-
-            <div class="ss-go-top">
-                <a class="smoothscroll" title="Back to Top" href="#top">
-                    <svg viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" width="15" height="15"><path d="M7.5 1.5l.354-.354L7.5.793l-.354.353.354.354zm-.354.354l4 4 .708-.708-4-4-.708.708zm0-.708l-4 4 .708.708 4-4-.708-.708zM7 1.5V14h1V1.5H7z" fill="currentColor"></path></svg>
-                </a>
-            </div> <!-- end ss-go-top -->
-        </div> <!-- end s-footer__bottom -->
-
-   </footer> <!-- end s-footer -->
 </body>
-
 </html>
